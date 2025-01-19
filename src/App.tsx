@@ -1,8 +1,10 @@
+import { Nav } from "./components/nav";
 
 const App = () => {
+
   return (
     <div>
-      hello
+      <Nav/>
     </div>
   );
 };

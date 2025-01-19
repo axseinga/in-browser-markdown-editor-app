@@ -14,6 +14,8 @@ export default {
         "customlightGrey-800": "#2B2D31",
         "customlightGrey-900": "#1D1F22",
         customBlack: "#151619",
+        customOrange: "#E46643",
+        customOrangeHover: "#F39765",
       },
       fontSize: {
         "preview-h1": ["2rem", "100%"],
