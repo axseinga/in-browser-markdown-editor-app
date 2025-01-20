@@ -5,7 +5,7 @@ type HamburgerMenuProps = {
 
 export const HambugerMenu = ({ isOpen, setIsOpen }: HamburgerMenuProps) => {
   return (
-    <div className="flex h-14 w-14 items-center justify-center bg-customlightGrey-700">
+    <div className="bg-customGrey-700 flex h-14 w-14 items-center justify-center">
       <button
         className="group relative flex h-[14px] w-[23px] flex-col items-center justify-between"
         onClick={() => setIsOpen((prev) => !prev)}
