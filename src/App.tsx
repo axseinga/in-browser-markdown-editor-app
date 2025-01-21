@@ -3,11 +3,11 @@ import { Nav } from "./components/nav";
 import { SidebarMenu } from "./components/sidebar-menu";
 import { PreviewWindow } from "./containers/preview-window";
 import { MarkdownWindow } from "./containers/markdown-window";
+import { useAppState } from "./state/app-state";
 
 const App = () => {
-  const [isSideMenuOpen, setIsSideMenuOpen] = useState(false);
-  const [showMarkdown, setShowMarkdown] = useState(true);
-  const [showPreview, setShowPreview] = useState(true);
+  // const [isSideMenuOpen, setIsSideMenuOpen] = useState(false);
+  const { showSidebar, showMarkdown } = useAppState();
   const [file, setFile] = useState({
     id: "AHdddcdBHD",
     createdAt: "04-01-2022",
@@ -18,28 +18,16 @@ const App = () => {
 
   return (
     <div className="relative flex overflow-hidden">
-      <SidebarMenu isOpen={isSideMenuOpen} />
+      <SidebarMenu/>
       <div
         className={`w-full flex-shrink-0 transition-transform duration-300 ${
-          isSideMenuOpen ? "translate-x-0" : "-translate-x-[15.625rem]"
+          showSidebar ? "translate-x-0" : "-translate-x-[15.625rem]"
         }`}
       >
-        <Nav isOpen={isSideMenuOpen} setIsOpen={setIsSideMenuOpen} />
+        <Nav/>
         <div className="flex flex-col sm:grid sm:grid-cols-2">
-          {showMarkdown && (
-            <MarkdownWindow
-              data={file.content}
-              showPreview={showPreview}
-              toggleShowPreview={setShowPreview}
-              showMarkdown={showMarkdown}
-              toggleShowMarkdown={setShowMarkdown}
-            />
-          )}
-          <PreviewWindow
-            data={file.content}
-            show={showMarkdown}
-            toggleShow={setShowMarkdown}
-          />
+          {showMarkdown && <MarkdownWindow data={file.content} />}
+          <PreviewWindow data={file.content} />
         </div>
       </div>
     </div>

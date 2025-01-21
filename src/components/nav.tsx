@@ -3,15 +3,11 @@ import { IconSave } from "@/components/icons/icon-save";
 import { IconDocument } from "@/components/icons/icon-document";
 import { HambugerMenu } from "./hamburger-menu";
 
-type NavProps = {
-  isOpen: boolean;
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-};
+export const Nav = () => {
 
-export const Nav = ({ isOpen, setIsOpen }: NavProps) => {
   return (
     <nav className="bg-customGrey-800 flex h-14 w-full flex-shrink-0 items-center text-white">
-      <HambugerMenu isOpen={isOpen} setIsOpen={setIsOpen} />
+      <HambugerMenu/>
       <div className="flex w-full items-center justify-between pl-5 pr-2">
         <div>
           {/* <p>doc name</p> */}

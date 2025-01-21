@@ -1,16 +1,15 @@
+import { useAppState } from "@/state/app-state";
 import { IconShowHidePreview } from "./icons/icon-show-hide-preview";
 
 type WindowHeadingProps = {
   title: string;
   show: boolean;
-  toggleShow: React.Dispatch<React.SetStateAction<boolean>>;
   hideToggleButtonOnDesktop?: boolean;
 };
 
 export const WindowHeading = ({
   title,
   show,
-  toggleShow,
   hideToggleButtonOnDesktop,
 }: WindowHeadingProps) => {
   return (
@@ -19,7 +18,7 @@ export const WindowHeading = ({
         {title}
       </p>
       <button
-        onClick={() => toggleShow((prev) => !prev)}
+        onClick={() => useAppState.getState().toggleShowMarkdown()}
         className={`flex h-[2.2rem] w-[2.2rem] items-center justify-center ${hideToggleButtonOnDesktop ? "md:hidden" : ""}`}
       >
         <IconShowHidePreview show={show} />
