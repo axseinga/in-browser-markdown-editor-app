@@ -8,11 +8,14 @@ type PreviewWindowProps = {
 
 export const PreviewWindow = ({ data }: PreviewWindowProps) => {
   const { showMarkdown } = useAppState();
-
   return (
     <div>
-      <WindowHeading title="Preview" show={showMarkdown} />
-      <MarkdownRewrite data={data} />
+      <WindowHeading title="Preview" />
+      <div
+        className={`markdown whitespace-pre-line p-5 ${!showMarkdown ? "max-w-[45rem] m-auto" : ""}`}
+      >
+        <MarkdownRewrite data={data} />
+      </div>
     </div>
   );
 };

@@ -21,6 +21,7 @@ export default {
         roboto: "Roboto, serif",
         robotoSlab: "Roboto Slab, serif",
         robotoMono: "Roboto Mono, serif",
+        commissioner: "Commissioner, serif",
       },
     },
   },

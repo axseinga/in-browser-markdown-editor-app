@@ -3,15 +3,15 @@ import { IconShowHidePreview } from "./icons/icon-show-hide-preview";
 
 type WindowHeadingProps = {
   title: string;
-  show: boolean;
   hideToggleButtonOnDesktop?: boolean;
 };
 
 export const WindowHeading = ({
   title,
-  show,
   hideToggleButtonOnDesktop,
 }: WindowHeadingProps) => {
+  const { showMarkdown } = useAppState();
+  
   return (
     <div className="flex h-[2.625rem] w-full items-center justify-between bg-customGrey-200 px-5">
       <p className="heading-s-in-app py-5 uppercase text-customGrey-500">
@@ -21,7 +21,7 @@ export const WindowHeading = ({
         onClick={() => useAppState.getState().toggleShowMarkdown()}
         className={`flex h-[2.2rem] w-[2.2rem] items-center justify-center ${hideToggleButtonOnDesktop ? "md:hidden" : ""}`}
       >
-        <IconShowHidePreview show={show} />
+        <IconShowHidePreview show={showMarkdown} />
       </button>
     </div>
   );

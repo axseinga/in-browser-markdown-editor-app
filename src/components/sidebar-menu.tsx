@@ -1,6 +1,6 @@
 import { useAppState } from "@/state/app-state";
-import { IconDocument } from "./icons/icon-document";
-import { ThemeToggle } from "./theme-toggle";
+import { IconDocument } from "@/components/icons/icon-document";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export const SidebarMenu = () => {
   const { showSidebar } = useAppState();
@@ -12,7 +12,9 @@ export const SidebarMenu = () => {
       }`}
     >
       <div className="flex flex-grow flex-col gap-7">
-        <p className="uppercase tracking-[5px]">Markdown</p>
+        <p className="font-commissioner text-[0.938rem] font-semibold uppercase tracking-[5px] md:hidden">
+          Markdown
+        </p>
         <p className="heading-s-in-app uppercase text-customGrey-500">
           My documents
         </p>

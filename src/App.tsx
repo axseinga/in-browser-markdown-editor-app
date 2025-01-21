@@ -6,7 +6,6 @@ import { MarkdownWindow } from "./containers/markdown-window";
 import { useAppState } from "./state/app-state";
 
 const App = () => {
-  // const [isSideMenuOpen, setIsSideMenuOpen] = useState(false);
   const { showSidebar, showMarkdown } = useAppState();
   const [file, setFile] = useState({
     id: "AHdddcdBHD",
@@ -18,14 +17,16 @@ const App = () => {
 
   return (
     <div className="relative flex overflow-hidden">
-      <SidebarMenu/>
+      <SidebarMenu />
       <div
         className={`w-full flex-shrink-0 transition-transform duration-300 ${
           showSidebar ? "translate-x-0" : "-translate-x-[15.625rem]"
         }`}
       >
-        <Nav/>
-        <div className="flex flex-col sm:grid sm:grid-cols-2">
+        <Nav />
+        <div
+          className={`flex flex-col sm:grid ${showMarkdown ? "grid-cols-2" : "grid-cols-1"}`}
+        >
           {showMarkdown && <MarkdownWindow data={file.content} />}
           <PreviewWindow data={file.content} />
         </div>
