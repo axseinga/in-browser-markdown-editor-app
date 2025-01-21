@@ -5,12 +5,12 @@ type HamburgerMenuProps = {
 
 export const HambugerMenu = ({ isOpen, setIsOpen }: HamburgerMenuProps) => {
   return (
-    <div className="bg-customGrey-700 flex h-14 w-14 items-center justify-center">
-      <button
-        className="group relative flex h-[14px] w-[23px] flex-col items-center justify-between"
-        onClick={() => setIsOpen((prev) => !prev)}
-        aria-label="Toggle Menu"
-      >
+    <button
+      className="bg-customGrey-700 flex h-14 w-14 items-center justify-center transition-colors duration-300 hover:bg-customOrange"
+      onClick={() => setIsOpen((prev) => !prev)}
+      aria-label="Toggle Menu"
+    >
+      <div className="group relative flex h-[14px] w-[23px] flex-col items-center justify-between">
         <span
           className={`block h-[2px] bg-white transition-all duration-300 ${
             isOpen
@@ -32,7 +32,7 @@ export const HambugerMenu = ({ isOpen, setIsOpen }: HamburgerMenuProps) => {
               : "w-[23px] group-hover:bg-white"
           }`}
         ></span>
-      </button>
-    </div>
+      </div>
+    </button>
   );
 };
