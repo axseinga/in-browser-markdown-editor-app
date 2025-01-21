@@ -1,3 +1,77 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+    .preview-h1 {
+        font-family: "Roboto Slab", serif;
+        font-size: 2rem;
+        line-height: 100%;
+        font-weight: 700;
+    }
+    .preview-h2 {
+        font-family: "Roboto Slab", serif;
+        font-size: 1.75rem;
+        line-height: 100%;
+        font-weight: 300;
+    }
+    .preview-h3 {
+        font-family: "Roboto Slab", serif;
+        font-size: 1.5rem;
+        line-height: 100%;
+        font-weight: 700;
+    }
+    .preview-h4 {
+        font-family: "Roboto Slab", serif;
+        font-size: 1.25rem;
+        line-height: 100%;
+        font-weight: 700;
+    }
+    .preview-h5 {
+        font-family: "Roboto Slab", serif;
+        font-size: 1rem;
+        line-height: 100%;
+        font-weight: 700;
+    }
+    .preview-h6 {
+        font-family: "Roboto Slab", serif;
+        font-size: 0.875rem;
+        line-height: 100%;
+        font-weight: 700;
+        color: #E46643;
+    }
+    .markdown {
+        font-family: "Roboto Mono", serif;
+        font-size: 0.875rem;
+        line-height: 1.5rem;
+    }
+    .preview-paragraph {
+        font-family: "Roboto Slab", serif;
+        font-size: 0.875rem;
+        line-height: 150%;
+        font-weight: 300;
+    }
+    .preview-paragraph-bold {
+        font-family: "Roboto Slab", serif;
+        font-size: 0.875rem;
+        line-height: 180%;
+        font-weight: 700;
+    }
+    .heading-m-in-app {
+        font-family: "Roboto", serif;
+        font-size: 0.938rem;
+        line-height: 100%;
+    }
+    .heading-s-in-app {
+        font-family: "Roboto", serif;
+        font-size: 0.875rem;
+        line-height: 100%;
+        letter-spacing: 0.125rem;
+    }
+    .body-in-app {
+        font-family: "Roboto", serif;
+        font-size: 0.813rem;
+        line-height: 100%;
+        font-weight: 300;
+    }
+  }
