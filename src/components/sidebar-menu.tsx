@@ -1,8 +1,15 @@
 import { useAppState } from "@/state/app-state";
 import { IconDocument } from "@/components/icons/icon-document";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { MarkdownMenuItem } from "@/types";
+import { formatDate } from "@/utils/format-date";
 
-export const SidebarMenu = () => {
+type SidebarMenuProps = {
+  items: MarkdownMenuItem[];
+  setActiveFileID: (id: string) => void;
+};
+
+export const SidebarMenu = ({ items, setActiveFileID }: SidebarMenuProps) => {
   const { showSidebar } = useAppState();
 
   return (
@@ -22,8 +29,13 @@ export const SidebarMenu = () => {
           + New Document
         </button>
         <ul className="flex flex-col gap-4">
-          <SidebarMenuDocumentItem />
-          <SidebarMenuDocumentItem />
+          {items.map((item) => (
+            <SidebarMenuDocumentItem
+              key={`SidebarMenuItem_${item.id}`}
+              item={item}
+              setActiveFileID={setActiveFileID}
+            />
+          ))}
         </ul>
       </div>
       <ThemeToggle id="theme-toggle" />
@@ -31,16 +43,28 @@ export const SidebarMenu = () => {
   );
 };
 
-const SidebarMenuDocumentItem = () => {
+type SidebarMenuDocumentItemProps = {
+  item: MarkdownMenuItem;
+  setActiveFileID: (id: string) => void;
+};
+
+const SidebarMenuDocumentItem = ({
+  item,
+  setActiveFileID,
+}: SidebarMenuDocumentItemProps) => {
+  const date = formatDate(item.createdAt);
   return (
     <li className="flex shrink-0">
-      <div className="flex shrink-0 items-center gap-4">
+      <button
+        className="flex shrink-0 items-center gap-4 hover:text-customOrange"
+        onClick={() => setActiveFileID(item.id)}
+      >
         <IconDocument />
         <div className="flex flex-col">
-          <p className="body-in-app text-customGrey-500">01 April 2022</p>
-          <p>welcome.md</p>
+          <p className="body-in-app text-customGrey-500">{date}</p>
+          <p>{item.name}</p>
         </div>
-      </div>
+      </button>
     </li>
   );
 };
