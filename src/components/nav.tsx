@@ -6,9 +6,10 @@ import { useEffect, useState } from "react";
 
 type NavProps = {
   fileName: string;
+  setIsDialogOpen: (isOpen: boolean) => void;
 };
 
-export const Nav = ({ fileName }: NavProps) => {
+export const Nav = ({ fileName, setIsDialogOpen }: NavProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [docNameInput, setDocNameInput] = useState(fileName);
 
@@ -67,7 +68,10 @@ export const Nav = ({ fileName }: NavProps) => {
           </div>
         </div>
         <div className="flex items-center gap-5 sm:gap-7">
-          <button aria-label="Delete file">
+          <button
+            aria-label="Delete file"
+            onClick={() => setIsDialogOpen(true)}
+          >
             <IconDelete />
           </button>
           <button className="flex items-center gap-2 rounded-md bg-customOrange p-3 transition-all duration-300 hover:bg-customOrangeHover sm:px-4 md:min-w-[150px]">
