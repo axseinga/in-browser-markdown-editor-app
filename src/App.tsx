@@ -7,11 +7,15 @@ import { useAppState } from "./state/app-state";
 import { useFetchMarkdownCollection } from "@/services/api/use-fetch-markdown-collection";
 import { welcomeFile } from "./data";
 import { Modal } from "./components/modal";
+import { Loader } from "./components/loader";
+import { DeleteConfirmationModalBody } from "./containers/delete-confirmation-modal-body";
+import { LoginModalBody } from "./containers/login-modal-body";
 
 const App = () => {
-  const { markdownItems, error, loading } = useFetchMarkdownCollection();
-  const [activeFileID, setActiveFileID] = useState<string>(welcomeFile.sys.id);
-  const { showSidebar, showMarkdown } = useAppState();
+  const { error, loading } = useFetchMarkdownCollection();
+  const { showSidebar, showMarkdown, activeFileID, markdownItems } =
+    useAppState();
+  const [dialogId, setDialogId] = useState<"login" | "deleteAction">("login");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const activeFile = useMemo(() => {
@@ -19,6 +23,8 @@ const App = () => {
       markdownItems.find((file) => file.sys.id === activeFileID) ?? welcomeFile
     );
   }, [markdownItems, activeFileID]);
+
+  // if (loading) return <Loader />;
 
   return (
     <>
@@ -31,14 +37,17 @@ const App = () => {
               createdAt: file.createdAt,
             };
           })}
-          setActiveFileID={setActiveFileID}
         />
         <div
           className={`w-full flex-shrink-0 transition-transform duration-300 ${
             showSidebar ? "translate-x-0" : "-translate-x-[15.625rem]"
           }`}
         >
-          <Nav fileName={activeFile.name} setIsDialogOpen={setIsDialogOpen} />
+          <Nav
+            activeFile={activeFile}
+            setIsDialogOpen={setIsDialogOpen}
+            setDialogId={setDialogId}
+          />
           <div
             className={`flex flex-col sm:grid ${showMarkdown ? "grid-cols-2" : "grid-cols-1"}`}
           >
@@ -47,7 +56,17 @@ const App = () => {
           </div>
         </div>
       </div>
-      <Modal isOpen={isDialogOpen} setIsModalOpen={setIsDialogOpen} id="delete-dialog"/>
+      <Modal
+        isOpen={isDialogOpen}
+        setIsModalOpen={setIsDialogOpen}
+        id="delete-dialog"
+      >
+        {dialogId === "login" ? (
+          <LoginModalBody setIsModalOpen={setIsDialogOpen} />
+        ) : (
+          <DeleteConfirmationModalBody setIsModalOpen={setIsDialogOpen} />
+        )}
+      </Modal>
     </>
   );
 };

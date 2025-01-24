@@ -3,14 +3,33 @@ import { IconDocument } from "@/components/icons/icon-document";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { MarkdownMenuItem } from "@/types";
 import { formatDate } from "@/utils/format-date";
+import { useMemo } from "react";
 
 type SidebarMenuProps = {
   items: MarkdownMenuItem[];
-  setActiveFileID: (id: string) => void;
 };
 
-export const SidebarMenu = ({ items, setActiveFileID }: SidebarMenuProps) => {
+export const SidebarMenu = ({ items }: SidebarMenuProps) => {
   const { showSidebar } = useAppState();
+
+  const handleAddNewDocument = () => {
+    const now = new Date();
+    useAppState.getState().addMarkdownItem({
+      sys: {
+        id: `tempID_${now}_${now.getTime()}`,
+      },
+      createdAt: now.toISOString(),
+      name: "untitled-file.md",
+      content: "",
+    });
+  };
+
+  const sortedItems = useMemo(() => {
+    return items.sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+    );
+  }, [items]);
 
   return (
     <div
@@ -25,15 +44,17 @@ export const SidebarMenu = ({ items, setActiveFileID }: SidebarMenuProps) => {
         <p className="heading-s-in-app uppercase text-customGrey-500">
           My documents
         </p>
-        <button className="heading-m-in-app w-full rounded-md bg-customOrange px-4 py-3 hover:bg-customOrangeHover">
+        <button
+          onClick={handleAddNewDocument}
+          className="heading-m-in-app w-full rounded-md bg-customOrange px-4 py-3 hover:bg-customOrangeHover"
+        >
           + New Document
         </button>
         <ul className="flex flex-col gap-4">
-          {items.map((item) => (
+          {sortedItems.map((item) => (
             <SidebarMenuDocumentItem
               key={`SidebarMenuItem_${item.id}`}
               item={item}
-              setActiveFileID={setActiveFileID}
             />
           ))}
         </ul>
@@ -45,22 +66,18 @@ export const SidebarMenu = ({ items, setActiveFileID }: SidebarMenuProps) => {
 
 type SidebarMenuDocumentItemProps = {
   item: MarkdownMenuItem;
-  setActiveFileID: (id: string) => void;
 };
 
-const SidebarMenuDocumentItem = ({
-  item,
-  setActiveFileID,
-}: SidebarMenuDocumentItemProps) => {
+const SidebarMenuDocumentItem = ({ item }: SidebarMenuDocumentItemProps) => {
   const date = formatDate(item.createdAt);
   return (
     <li className="flex shrink-0">
       <button
         className="flex shrink-0 items-center gap-4 hover:text-customOrange"
-        onClick={() => setActiveFileID(item.id)}
+        onClick={() => useAppState.getState().setActiveFileID(item.id)}
       >
         <IconDocument />
-        <div className="flex flex-col">
+        <div className="flex flex-col text-left">
           <p className="body-in-app text-customGrey-500">{date}</p>
           <p>{item.name}</p>
         </div>

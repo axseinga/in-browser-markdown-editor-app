@@ -3,19 +3,24 @@ import { IconSave } from "@/components/icons/icon-save";
 import { IconDocument } from "@/components/icons/icon-document";
 import { HambugerMenu } from "./hamburger-menu";
 import { useEffect, useState } from "react";
+import { IconLogin } from "./icons/icon-login";
+import { useAppState } from "@/state/app-state";
+import { MarkdownItemT } from "@/types";
 
 type NavProps = {
-  fileName: string;
+  activeFile: MarkdownItemT;
   setIsDialogOpen: (isOpen: boolean) => void;
+  setDialogId: (id: "login" | "deleteAction") => void;
 };
 
-export const Nav = ({ fileName, setIsDialogOpen }: NavProps) => {
+export const Nav = ({ activeFile, setIsDialogOpen, setDialogId }: NavProps) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [docNameInput, setDocNameInput] = useState(fileName);
+  const [docNameInput, setDocNameInput] = useState(activeFile.name);
+  const { activeFileID } = useAppState();
 
   useEffect(() => {
-    setDocNameInput(fileName);
-  }, [fileName]);
+    setDocNameInput(activeFile.name);
+  }, [activeFile.name]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDocNameInput(e.target.value);
@@ -23,7 +28,10 @@ export const Nav = ({ fileName, setIsDialogOpen }: NavProps) => {
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      // @todo save new file name
+      useAppState.getState().updateMarkdownItem(activeFileID, {
+        ...activeFile,
+        name: docNameInput,
+      });
       setIsEditing(false);
     }
   };
@@ -67,14 +75,26 @@ export const Nav = ({ fileName, setIsDialogOpen }: NavProps) => {
             </div>
           </div>
         </div>
-        <div className="flex items-center gap-5 sm:gap-7">
+        <div className="flex items-center gap-4">
+          <button
+            aria-label="Login"
+            onClick={() => {
+              setIsDialogOpen(true);
+              setDialogId("login");
+            }}
+          >
+            <IconLogin />
+          </button>
           <button
             aria-label="Delete file"
-            onClick={() => setIsDialogOpen(true)}
+            onClick={() => {
+              setIsDialogOpen(true);
+              setDialogId("deleteAction");
+            }}
           >
             <IconDelete />
           </button>
-          <button className="flex items-center gap-2 rounded-md bg-customOrange p-3 transition-all duration-300 hover:bg-customOrangeHover sm:px-4 md:min-w-[150px]">
+          <button className="ml-4 flex items-center gap-2 rounded-md bg-customOrange p-3 transition-all duration-300 hover:bg-customOrangeHover sm:px-4 md:min-w-[150px]">
             <IconSave />
             <p className="heading-m-in-app hidden font-light sm:flex">
               Save Changes
