@@ -3,19 +3,23 @@ import { useAppState } from "@/state/app-state";
 
 type DeleteConfirmationModalBodyProps = {
   setIsModalOpen: (isOpen: boolean) => void;
+  fileName: string;
 };
 
 export const DeleteConfirmationModalBody = ({
   setIsModalOpen,
+  fileName,
 }: DeleteConfirmationModalBodyProps) => {
   const { activeFileID } = useAppState();
 
   const handleDeleteDocument = async (id: string) => {
+    useAppState.getState().deleteMarkdownItem(activeFileID);
     await deleteMarkdown(id);
-    setIsModalOpen(false);
-  };
 
-  // @todo pass name of the file to component
+    setTimeout(() => {
+      setIsModalOpen(false);
+    }, 2000);
+  };
 
   return (
     <div className="flex max-w-[21.438rem] flex-col gap-3 bg-white p-6">
@@ -23,7 +27,7 @@ export const DeleteConfirmationModalBody = ({
         Delete this document?
       </p>
       <p className="preview-paragraph text-customGrey-500">
-        Are you sure you want to delete the ‘welcome.md’ document and its
+        Are you sure you want to delete the ‘{fileName}’ document and its
         contents? This action cannot be reversed.
       </p>
       <button

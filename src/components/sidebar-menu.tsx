@@ -14,14 +14,16 @@ export const SidebarMenu = ({ items }: SidebarMenuProps) => {
 
   const handleAddNewDocument = () => {
     const now = new Date();
+    const tempID = `tempID_${now}_${now.getTime()}`;
     useAppState.getState().addMarkdownItem({
       sys: {
-        id: `tempID_${now}_${now.getTime()}`,
+        id: tempID,
       },
       createdAt: now.toISOString(),
       name: "untitled-file.md",
       content: "",
     });
+    useAppState.getState().setActiveFileID(tempID);
   };
 
   const sortedItems = useMemo(() => {

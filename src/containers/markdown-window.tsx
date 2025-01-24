@@ -1,14 +1,22 @@
 import { WindowHeading } from "@/components/window-heading";
 
 type MarkdownWindowProps = {
-  data: string;
+  contentInput: string;
+  handleChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
 };
 
-export const MarkdownWindow = ({ data }: MarkdownWindowProps) => {
+export const MarkdownWindow = ({
+  contentInput,
+  handleChange,
+}: MarkdownWindowProps) => {
   return (
     <div>
       <WindowHeading title="Markdown" hideToggleButtonOnDesktop />
-      <p className="markdown whitespace-pre-line p-5">{data}</p>
+      <textarea
+        className="markdown h-full w-full whitespace-pre-line bg-transparent p-5 focus:outline-none"
+        value={contentInput}
+        onChange={handleChange}
+      />
     </div>
   );
 };

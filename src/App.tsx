@@ -1,8 +1,6 @@
 import { useMemo, useState } from "react";
 import { Nav } from "./components/nav";
 import { SidebarMenu } from "./components/sidebar-menu";
-import { PreviewWindow } from "./containers/preview-window";
-import { MarkdownWindow } from "./containers/markdown-window";
 import { useAppState } from "./state/app-state";
 import { useFetchMarkdownCollection } from "@/services/api/use-fetch-markdown-collection";
 import { welcomeFile } from "./data";
@@ -10,6 +8,7 @@ import { Modal } from "./components/modal";
 import { Loader } from "./components/loader";
 import { DeleteConfirmationModalBody } from "./containers/delete-confirmation-modal-body";
 import { LoginModalBody } from "./containers/login-modal-body";
+import { MarkdownEditor } from "./containers/markdown-editor";
 
 const App = () => {
   const { error, loading } = useFetchMarkdownCollection();
@@ -48,12 +47,7 @@ const App = () => {
             setIsDialogOpen={setIsDialogOpen}
             setDialogId={setDialogId}
           />
-          <div
-            className={`flex flex-col sm:grid ${showMarkdown ? "grid-cols-2" : "grid-cols-1"}`}
-          >
-            {showMarkdown && <MarkdownWindow data={activeFile.content} />}
-            <PreviewWindow data={activeFile.content} />
-          </div>
+          <MarkdownEditor showMarkdown={showMarkdown} activeFile={activeFile}/>
         </div>
       </div>
       <Modal
@@ -64,7 +58,10 @@ const App = () => {
         {dialogId === "login" ? (
           <LoginModalBody setIsModalOpen={setIsDialogOpen} />
         ) : (
-          <DeleteConfirmationModalBody setIsModalOpen={setIsDialogOpen} />
+          <DeleteConfirmationModalBody
+            setIsModalOpen={setIsDialogOpen}
+            fileName={activeFile.name}
+          />
         )}
       </Modal>
     </>
