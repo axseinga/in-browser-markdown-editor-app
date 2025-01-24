@@ -27,3 +27,18 @@ export type MarkdownMenuItem = {
   name: string;
   createdAt: string;
 };
+
+export type FormTypes = {
+  email: string;
+  password: string;
+  passwordConfirmation?: string;
+  name: string;
+};
+
+export type UserT = {
+  sys: {
+    id: string;
+  };
+  name: string;
+  email: string;
+};

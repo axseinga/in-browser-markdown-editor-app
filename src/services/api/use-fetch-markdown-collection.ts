@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { contentfulClient } from "@/services/graphql/contentful-client";
 import { getMarkdownsQuery } from "@/services/graphql/queries/get-users-markdowns-by-email";
-import { UserCollectionResponse, MarkdownItemT } from "@/types";
+import { UserCollectionResponse } from "@/types";
 import { welcomeFile } from "@/data";
+import { useAppState } from "@/state/app-state";
 
 export const useFetchMarkdownCollection = () => {
-  const [markdownItems, setMarkdownItems] = useState<MarkdownItemT[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<boolean>(false);
 
@@ -22,10 +22,11 @@ export const useFetchMarkdownCollection = () => {
         const items =
           data?.userCollection.items?.[0]?.itemsCollection?.items ?? [];
         const itemsWithInitialFile = [...items, welcomeFile];
-        setMarkdownItems(itemsWithInitialFile);
+        useAppState.getState().setMarkdownItems(itemsWithInitialFile);
       } catch (error) {
         console.log(error);
         setError(true);
+        useAppState.getState().setMarkdownItems([welcomeFile]);
       } finally {
         setLoading(false);
       }
@@ -34,5 +35,5 @@ export const useFetchMarkdownCollection = () => {
     fetchMarkdownCollection(email);
   }, []);
 
-  return { markdownItems, loading, error };
+  return { loading, error };
 };
