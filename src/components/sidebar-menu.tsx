@@ -4,12 +4,20 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { MarkdownMenuItem } from "@/types";
 import { formatDate } from "@/utils/format-date";
 import { useMemo } from "react";
+import { Loader } from "@/components/loader";
+import { sortMarkdownsByDate } from "@/utils/sort-markdowns-by-date";
 
 type SidebarMenuProps = {
   items: MarkdownMenuItem[];
+  isLoading?: boolean;
+  isError?: boolean;
 };
 
-export const SidebarMenu = ({ items }: SidebarMenuProps) => {
+export const SidebarMenu = ({
+  items,
+  isLoading,
+  isError,
+}: SidebarMenuProps) => {
   const { showSidebar } = useAppState();
 
   const handleAddNewDocument = () => {
@@ -27,10 +35,8 @@ export const SidebarMenu = ({ items }: SidebarMenuProps) => {
   };
 
   const sortedItems = useMemo(() => {
-    return items.sort(
-      (a, b) =>
-        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-    );
+    const sorted = sortMarkdownsByDate(items) as MarkdownMenuItem[];
+    return sorted;
   }, [items]);
 
   return (
@@ -52,14 +58,22 @@ export const SidebarMenu = ({ items }: SidebarMenuProps) => {
         >
           + New Document
         </button>
-        <ul className="flex flex-col gap-4">
-          {sortedItems.map((item) => (
-            <SidebarMenuDocumentItem
-              key={`SidebarMenuItem_${item.id}`}
-              item={item}
-            />
-          ))}
-        </ul>
+        <div aria-live="polite">
+          {isLoading ? (
+            <Loader />
+          ) : isError ? (
+            <p>Something went wrong retrieving files...</p>
+          ) : (
+            <ul className="flex flex-col gap-4">
+              {sortedItems.map((item) => (
+                <SidebarMenuDocumentItem
+                  key={`SidebarMenuItem_${item.id}`}
+                  item={item}
+                />
+              ))}
+            </ul>
+          )}
+        </div>
       </div>
       <ThemeToggle id="theme-toggle" />
     </div>

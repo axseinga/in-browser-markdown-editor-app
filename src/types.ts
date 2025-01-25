@@ -13,12 +13,19 @@ export interface UserCollectionResponse {
       sys: {
         id: string;
       };
+      password?: string;
       name: string;
       email: string;
       itemsCollection: {
         items: MarkdownItemT[];
       };
     }[];
+  };
+}
+
+export interface MarkdownCollectionResponse {
+  markdownCollection: {
+    items: MarkdownItemT[];
   };
 }
 
@@ -36,9 +43,9 @@ export type FormTypes = {
 };
 
 export type UserT = {
-  sys: {
-    id: string;
-  };
+  id: string;
   name: string;
   email: string;
 };
+
+export type DialogT = "" | "login" | "logout" | "deleteAction" | "saveAction";

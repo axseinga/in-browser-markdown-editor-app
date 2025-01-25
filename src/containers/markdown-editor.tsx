@@ -19,10 +19,7 @@ export const MarkdownEditor = ({
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setContentInput(e.target.value);
-    useAppState.getState().updateMarkdownItem(activeFileID, {
-      ...activeFile,
-      content: contentInput,
-    });
+    useAppState.getState().setEditingContent(e.target.value);
   };
 
   useEffect(() => {

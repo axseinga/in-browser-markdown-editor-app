@@ -3,6 +3,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { TextInput } from "@/components/text-input";
 import { loginSchema } from "@/utils/form-schemas/login-schema";
+import { loginUser } from "@/services/api/login-user";
+import { useState } from "react";
+import { useAppState } from "@/state/app-state";
 
 type LoginFormProps = {
   setShowRegister: (showRegister: boolean) => void;
@@ -21,14 +24,31 @@ export const LoginForm = ({
   } = useForm<FormTypes>({
     resolver: zodResolver(loginSchema),
   });
+  const [error, setError] = useState<string | null>(null);
 
   const onSubmit = async (formData: FormTypes) => {
     try {
-      // login to make call to backend
-      //   if (res.status === 201) {
-      //     reset();
-      // after a few seconds, close the modal
-      //   }
+      const isUserLoggedIn = await loginUser(formData);
+      if (isUserLoggedIn.status === 200 && isUserLoggedIn.data) {
+        useAppState.getState().setUser({
+          email: isUserLoggedIn.data.email,
+          name: isUserLoggedIn.data.name,
+          id: isUserLoggedIn.data.sys.id,
+        });
+        setTimeout(() => {
+          setIsModalOpen(false);
+          reset();
+        }, 1000);
+      } else if (
+        isUserLoggedIn.status === 401 ||
+        isUserLoggedIn.status === 404
+      ) {
+        setError("Invalid email or password");
+        reset();
+      } else {
+        setError("Something went wrong. Please try again later.");
+        reset();
+      }
     } catch (err) {
       console.error(err);
     }
@@ -40,7 +60,15 @@ export const LoginForm = ({
         noValidate
         onSubmit={handleSubmit(onSubmit)}
         className="flex min-w-[15rem] flex-col gap-2"
+        aria-errormessage="login-form-error"
       >
+        <p
+          id="login-form-error"
+          aria-live="polite"
+          className="body-in-app mt-1 h-3 py-1 text-red-600"
+        >
+          {error}
+        </p>
         <TextInput
           name="email"
           label="Email:"

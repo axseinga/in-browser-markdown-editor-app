@@ -1,7 +1,7 @@
 import { gql } from "graphql-request";
 
-export const getMarkdownsQuery = gql`
-  query GetUsersMarkdownsByEmail($email: String!) {
+export const getUserByEmailQuery = gql`
+  query GetUserByEmail($email: String!) {
     userCollection(where: { email: $email }) {
       items {
         sys {
@@ -9,6 +9,7 @@ export const getMarkdownsQuery = gql`
         }
         name
         email
+        password
         itemsCollection {
           items {
             sys {

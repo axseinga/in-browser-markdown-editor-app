@@ -1,41 +1,17 @@
 import { IconDelete } from "@/components/icons/icon-delete";
-import { IconSave } from "@/components/icons/icon-save";
-import { IconDocument } from "@/components/icons/icon-document";
-import { HambugerMenu } from "./hamburger-menu";
-import { useEffect, useState } from "react";
-import { IconLogin } from "./icons/icon-login";
-import { useAppState } from "@/state/app-state";
-import { MarkdownItemT } from "@/types";
+import { HambugerMenu } from "@/components/hamburger-menu";
+import { DialogT, MarkdownItemT } from "@/types";
+import { FileNameEditor } from "@/components/file-name-editor";
+import { SaveFileChangesButton } from "@/components/save-file-changes-button";
+import { UserNavPanel } from "@/components/user-nav-panel";
 
 type NavProps = {
   activeFile: MarkdownItemT;
   setIsDialogOpen: (isOpen: boolean) => void;
-  setDialogId: (id: "login" | "deleteAction") => void;
+  setDialogId: (id: DialogT) => void;
 };
 
 export const Nav = ({ activeFile, setIsDialogOpen, setDialogId }: NavProps) => {
-  const [isEditing, setIsEditing] = useState(false);
-  const [docNameInput, setDocNameInput] = useState(activeFile.name);
-  const { activeFileID } = useAppState();
-
-  useEffect(() => {
-    setDocNameInput(activeFile.name);
-  }, [activeFile.name]);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setDocNameInput(e.target.value);
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      useAppState.getState().updateMarkdownItem(activeFileID, {
-        ...activeFile,
-        name: docNameInput,
-      });
-      setIsEditing(false);
-    }
-  };
-
   return (
     <nav className="flex h-14 w-full flex-shrink-0 items-center bg-customGrey-800 text-white sm:h-[4.5rem] sm:pr-2">
       <HambugerMenu />
@@ -43,48 +19,12 @@ export const Nav = ({ activeFile, setIsDialogOpen, setDialogId }: NavProps) => {
         Markdown
       </p>
       <div className="flex w-full items-center justify-between pl-5 pr-2">
-        <div>
-          <div className="flex w-[55vw] items-center gap-3 md:w-[36vw]">
-            <IconDocument />
-            <div className="flex w-full flex-col gap-1">
-              <p className="body-in-app hidden text-customGrey-500 sm:flex">
-                Document Name
-              </p>
-              <div
-                className={`heading-m-in-app h-[22px] border-b-[1px] ${isEditing ? "w-full border-b-white" : "border-b-transparent"}`}
-              >
-                {isEditing ? (
-                  <input
-                    type="text"
-                    className="w-full bg-transparent"
-                    value={docNameInput}
-                    onChange={handleChange}
-                    onKeyDown={handleKeyDown}
-                  />
-                ) : (
-                  <button
-                    onClick={() => setIsEditing(true)}
-                    className="transition-colors duration-300 hover:border-b-[1px] hover:text-customOrange"
-                  >
-                    <p className="translate-y-[2px] transform">
-                      {docNameInput}
-                    </p>
-                  </button>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
+        <FileNameEditor activeFile={activeFile} />
         <div className="flex items-center gap-4">
-          <button
-            aria-label="Login"
-            onClick={() => {
-              setIsDialogOpen(true);
-              setDialogId("login");
-            }}
-          >
-            <IconLogin />
-          </button>
+          <UserNavPanel
+            setIsDialogOpen={setIsDialogOpen}
+            setDialogId={setDialogId}
+          />
           <button
             aria-label="Delete file"
             onClick={() => {
@@ -94,12 +34,11 @@ export const Nav = ({ activeFile, setIsDialogOpen, setDialogId }: NavProps) => {
           >
             <IconDelete />
           </button>
-          <button className="ml-4 flex items-center gap-2 rounded-md bg-customOrange p-3 transition-all duration-300 hover:bg-customOrangeHover sm:px-4 md:min-w-[150px]">
-            <IconSave />
-            <p className="heading-m-in-app hidden font-light sm:flex">
-              Save Changes
-            </p>
-          </button>
+          <SaveFileChangesButton
+            activeFile={activeFile}
+            setDialogId={setDialogId}
+            setIsDialogOpen={setIsDialogOpen}
+          />
         </div>
       </div>
     </nav>

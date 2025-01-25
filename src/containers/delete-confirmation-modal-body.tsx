@@ -1,5 +1,6 @@
 import { deleteMarkdown } from "@/services/api/delete-markdown";
 import { useAppState } from "@/state/app-state";
+import { useEffect, useState } from "react";
 
 type DeleteConfirmationModalBodyProps = {
   setIsModalOpen: (isOpen: boolean) => void;
@@ -10,32 +11,60 @@ export const DeleteConfirmationModalBody = ({
   setIsModalOpen,
   fileName,
 }: DeleteConfirmationModalBodyProps) => {
-  const { activeFileID } = useAppState();
+  const { activeFileID, markdownItems } = useAppState();
+  const [error, setError] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   const handleDeleteDocument = async (id: string) => {
     useAppState.getState().deleteMarkdownItem(activeFileID);
-    await deleteMarkdown(id);
-
-    setTimeout(() => {
-      setIsModalOpen(false);
-    }, 2000);
+    try {
+      await deleteMarkdown(id);
+      setSuccess(true);
+    } catch (err) {
+      console.error(err);
+      setError(true);
+    }
   };
 
+  useEffect(() => {
+    if (success) {
+      useAppState.getState().setActiveFileID(markdownItems[0].sys.id);
+      setTimeout(() => {
+        setIsModalOpen(false);
+      }, 1500);
+    }
+  }, [success, setIsModalOpen, markdownItems]);
+
   return (
-    <div className="flex max-w-[21.438rem] flex-col gap-3 bg-white p-6">
-      <p className="preview-h4 text-customGrey-700" id="dialog-description">
-        Delete this document?
-      </p>
-      <p className="preview-paragraph text-customGrey-500">
-        Are you sure you want to delete the ‘{fileName}’ document and its
-        contents? This action cannot be reversed.
-      </p>
-      <button
-        onClick={() => handleDeleteDocument(activeFileID)}
-        className="heading-m-in-app flex items-center justify-center rounded-md bg-customOrange p-3 font-light text-white transition-all duration-300 hover:bg-customOrangeHover sm:px-4"
-      >
-        <p>Confirm & Delete</p>
-      </button>
+    <div
+      className="flex max-w-[21.438rem] flex-col gap-3 bg-white p-6"
+      aria-live="polite"
+    >
+      {success ? (
+        <p className="preview-h4 text-center text-customGrey-700">
+          The ‘{fileName}’ document has been deleted.
+        </p>
+      ) : (
+        <>
+          <p className="preview-h4 text-customGrey-700" id="dialog-description">
+            Delete this document?
+          </p>
+          <p className="preview-paragraph text-customGrey-500">
+            Are you sure you want to delete the{" "}
+            <span className="font-semibold">‘{fileName}’</span> document and its
+            contents? This action cannot be reversed.
+          </p>
+          <button
+            onClick={() => handleDeleteDocument(activeFileID)}
+            className="heading-m-in-app flex items-center justify-center rounded-md bg-customOrange p-3 font-light text-white transition-all duration-300 hover:bg-customOrangeHover sm:px-4"
+          >
+            Confirm & Delete
+          </button>
+          {error && (
+            <p className="body-in-app mt-1 h-3 py-1 text-red-600">{error}</p>
+          )}
+        </>
+      )}
     </div>
   );
 };

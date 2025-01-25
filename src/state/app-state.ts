@@ -18,6 +18,8 @@ type AppStateT = {
   addMarkdownItem: (item: MarkdownItemT) => void;
   updateMarkdownItem: (id: string, item: MarkdownItemT) => void;
   deleteMarkdownItem: (id: string) => void;
+  editingContent: string;
+  setEditingContent: (content: string) => void;
 };
 
 export const useAppState = create<AppStateT>()((set) => {
@@ -47,5 +49,7 @@ export const useAppState = create<AppStateT>()((set) => {
       set((state) => ({
         markdownItems: state.markdownItems.filter((item) => item.sys.id !== id),
       })),
+    editingContent: "",
+    setEditingContent: (content) => set({ editingContent: content }),
   };
 });
