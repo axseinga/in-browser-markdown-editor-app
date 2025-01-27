@@ -3,7 +3,7 @@ import { welcomeFile } from "@/data";
 import { updateMarkdownName } from "@/services/api/update-markdown-name";
 import { useAppState } from "@/state/app-state";
 import { MarkdownItemT } from "@/types";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 type FileNameEditorProps = {
   activeFile: MarkdownItemT;
@@ -14,8 +14,6 @@ export const FileNameEditor = ({ activeFile }: FileNameEditorProps) => {
   const [docNameInput, setDocNameInput] = useState(activeFile.name);
   const { activeFileID, user } = useAppState();
   const inputRef = useRef<HTMLInputElement>(null);
-
-  console.log(isEditing);
 
   useEffect(() => {
     setDocNameInput(activeFile.name);
@@ -29,39 +27,43 @@ export const FileNameEditor = ({ activeFile }: FileNameEditorProps) => {
     setDocNameInput(e.target.value);
   };
 
+  const saveInputChange = useCallback(async () => {
+    const updatedMarkdownItem = {
+      ...activeFile,
+      name: docNameInput,
+    };
+    useAppState
+      .getState()
+      .updateMarkdownItem(activeFileID, updatedMarkdownItem);
+    setIsEditing(false);
+
+    if (user) {
+      try {
+        const response = await updateMarkdownName({
+          newMarkdownName: docNameInput,
+          markdownId: activeFileID,
+        });
+        if (response.status !== 200) {
+          console.log("Error updating markdown");
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  }, [activeFile, activeFileID, docNameInput, user]);
+
   const handleSaveInputChange = async (
     e: React.KeyboardEvent<HTMLInputElement>,
   ) => {
     if (e.key === "Enter") {
-      const updatedMarkdownItem = {
-        ...activeFile,
-        name: docNameInput,
-      };
-      useAppState
-        .getState()
-        .updateMarkdownItem(activeFileID, updatedMarkdownItem);
-      setIsEditing(false);
-
-      if (user) {
-        try {
-          const response = await updateMarkdownName({
-            newMarkdownName: docNameInput,
-            markdownId: activeFileID,
-          });
-          if (response.status !== 200) {
-            console.log("Error updating markdown");
-          }
-        } catch (error) {
-          console.log(error);
-        }
-      }
+      saveInputChange();
     }
   };
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (inputRef.current && !inputRef.current.contains(e.target as Node)) {
-        setIsEditing(false);
+        saveInputChange();
       }
     };
 
@@ -69,7 +71,7 @@ export const FileNameEditor = ({ activeFile }: FileNameEditorProps) => {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [inputRef]);
+  }, [inputRef, saveInputChange]);
 
   return (
     <div className="flex w-[55vw] items-center gap-3 md:w-[36vw]">
@@ -85,6 +87,7 @@ export const FileNameEditor = ({ activeFile }: FileNameEditorProps) => {
         >
           {isEditing ? (
             <input
+              ref={inputRef}
               type="text"
               className="w-full bg-transparent caret-customOrange focus:outline-none focus:ring-2 focus:ring-customOrangeHover"
               value={docNameInput}
