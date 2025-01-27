@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { contentfulClient } from "@/services/graphql/contentful-client";
+import { contentfulGraphQLClient } from "@/services/graphql/contentful-client";
 import { getMarkdownsQuery } from "@/services/graphql/queries/get-markdowns-by-email";
 import { MarkdownCollectionResponse } from "@/types";
 import { welcomeFile } from "@/data";
@@ -14,7 +14,7 @@ export const useFetchMarkdownCollection = (email: string) => {
       try {
         setIsLoading(true);
         const variables = { email };
-        const data = await contentfulClient.request<MarkdownCollectionResponse>(
+        const data = await contentfulGraphQLClient.request<MarkdownCollectionResponse>(
           getMarkdownsQuery,
           variables,
         );

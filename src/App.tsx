@@ -14,7 +14,7 @@ const App = () => {
     useAppState();
   const [dialogId, setDialogId] = useState<DialogT>("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const { isLoading, error } = useFetchMarkdownCollection(user?.email ?? "");
+  const { error } = useFetchMarkdownCollection(user?.email ?? "");
 
   const activeFile = useMemo(() => {
     return (
@@ -33,7 +33,6 @@ const App = () => {
               createdAt: file.createdAt,
             };
           })}
-          isLoading={isLoading}
           isError={error}
         />
         <div
@@ -52,7 +51,7 @@ const App = () => {
       <Modal
         isOpen={isDialogOpen}
         setIsModalOpen={setIsDialogOpen}
-        id="delete-dialog"
+        id={`${dialogId}_modal`}
       >
         <ModalBody
           dialogId={dialogId}

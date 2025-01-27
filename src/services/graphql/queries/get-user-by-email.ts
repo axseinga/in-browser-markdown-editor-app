@@ -10,16 +10,6 @@ export const getUserByEmailQuery = gql`
         name
         email
         password
-        itemsCollection {
-          items {
-            sys {
-              id
-            }
-            createdAt
-            name
-            content
-          }
-        }
       }
     }
   }

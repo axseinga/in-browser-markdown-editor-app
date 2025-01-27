@@ -1,4 +1,5 @@
 import { IconDocument } from "@/components/icons/icon-document";
+import { updateMarkdownName } from "@/services/api/update-markdown-name";
 import { useAppState } from "@/state/app-state";
 import { MarkdownItemT } from "@/types";
 import { useEffect, useState } from "react";
@@ -10,23 +11,46 @@ type FileNameEditorProps = {
 export const FileNameEditor = ({ activeFile }: FileNameEditorProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [docNameInput, setDocNameInput] = useState(activeFile.name);
-  const { activeFileID } = useAppState();
+  const { activeFileID, user } = useAppState();
 
   useEffect(() => {
     setDocNameInput(activeFile.name);
   }, [activeFile.name]);
 
+  useEffect(() => {
+    setDocNameInput(activeFile.name);
+  }, [activeFileID]);
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDocNameInput(e.target.value);
   };
 
-  const handleSaveInputChange = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleSaveInputChange = async (
+    e: React.KeyboardEvent<HTMLInputElement>,
+  ) => {
     if (e.key === "Enter") {
-      useAppState.getState().updateMarkdownItem(activeFileID, {
+      const updatedMarkdownItem = {
         ...activeFile,
         name: docNameInput,
-      });
+      };
+      useAppState
+        .getState()
+        .updateMarkdownItem(activeFileID, updatedMarkdownItem);
       setIsEditing(false);
+
+      if (user) {
+        try {
+          const response = await updateMarkdownName({
+            newMarkdownName: docNameInput,
+            markdownId: activeFileID,
+          });
+          if (response.status !== 200) {
+            console.log("Error updating markdown");
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      }
     }
   };
 

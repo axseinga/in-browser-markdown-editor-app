@@ -1,4 +1,5 @@
 import { IconSave } from "@/components/icons/icon-save";
+import { updateMarkdownContent } from "@/services/api/update-markdown-content";
 import { useAppState } from "@/state/app-state";
 import { DialogT, MarkdownItemT } from "@/types";
 
@@ -13,14 +14,28 @@ export const SaveFileChangesButton = ({
   setDialogId,
   setIsDialogOpen,
 }: SaveFileChangesButtonProps) => {
-  const { activeFileID, editingContent } = useAppState();
+  const { activeFileID, editingContent, user } = useAppState();
 
-  const handleSaveFileChanges = () => {
+  const handleSaveFileChanges = async () => {
     setDialogId("saveAction");
     useAppState.getState().updateMarkdownItem(activeFileID, {
       ...activeFile,
       content: editingContent,
     });
+
+    if (user) {
+      try {
+        const response = await updateMarkdownContent({
+          newMarkdownContent: editingContent,
+          markdownId: activeFileID,
+        });
+        if (response.status !== 200) {
+          console.log("Error updating markdown");
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
 
     setTimeout(() => {
       setIsDialogOpen(true);

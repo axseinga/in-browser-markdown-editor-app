@@ -16,8 +16,16 @@ export interface UserCollectionResponse {
       password?: string;
       name: string;
       email: string;
-      itemsCollection: {
-        items: MarkdownItemT[];
+    }[];
+  };
+}
+
+export interface MarkdownVersionByIdQueryResponse {
+  markdownCollection: {
+    items: {
+      sys: {
+        id: string;
+        version: number;
       };
     }[];
   };

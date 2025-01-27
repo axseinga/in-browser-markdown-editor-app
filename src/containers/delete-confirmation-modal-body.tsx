@@ -14,12 +14,14 @@ export const DeleteConfirmationModalBody = ({
   const { activeFileID, markdownItems } = useAppState();
   const [error, setError] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [deletedFileName, setDeletedFileName] = useState(fileName);
 
   const handleDeleteDocument = async (id: string) => {
-    useAppState.getState().deleteMarkdownItem(activeFileID);
     try {
+      setDeletedFileName(fileName);
       await deleteMarkdown(id);
       setSuccess(true);
+      useAppState.getState().deleteMarkdownItem(activeFileID);
     } catch (err) {
       console.error(err);
       setError(true);
@@ -28,10 +30,11 @@ export const DeleteConfirmationModalBody = ({
 
   useEffect(() => {
     if (success) {
-      useAppState.getState().setActiveFileID(markdownItems[0].sys.id);
       setTimeout(() => {
+        useAppState.getState().setActiveFileID(markdownItems[0].sys.id);
         setIsModalOpen(false);
-      }, 1500);
+        setSuccess(false);
+      }, 2000);
     }
   }, [success, setIsModalOpen, markdownItems]);
 
@@ -42,7 +45,7 @@ export const DeleteConfirmationModalBody = ({
     >
       {success ? (
         <p className="preview-h4 text-center text-customGrey-700">
-          The ‘{fileName}’ document has been deleted.
+          The ‘{deletedFileName}’ document has been deleted.
         </p>
       ) : (
         <>
@@ -51,8 +54,8 @@ export const DeleteConfirmationModalBody = ({
           </p>
           <p className="preview-paragraph text-customGrey-500">
             Are you sure you want to delete the{" "}
-            <span className="font-semibold">‘{fileName}’</span> document and its
-            contents? This action cannot be reversed.
+            <span className="font-semibold">‘{deletedFileName}’</span> document
+            and its contents? This action cannot be reversed.
           </p>
           <button
             onClick={() => handleDeleteDocument(activeFileID)}

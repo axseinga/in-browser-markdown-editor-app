@@ -4,34 +4,54 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { MarkdownMenuItem } from "@/types";
 import { formatDate } from "@/utils/format-date";
 import { useMemo } from "react";
-import { Loader } from "@/components/loader";
 import { sortMarkdownsByDate } from "@/utils/sort-markdowns-by-date";
+import { createMarkdown } from "@/services/api/create-markdown";
 
 type SidebarMenuProps = {
   items: MarkdownMenuItem[];
-  isLoading?: boolean;
   isError?: boolean;
 };
 
-export const SidebarMenu = ({
-  items,
-  isLoading,
-  isError,
-}: SidebarMenuProps) => {
-  const { showSidebar } = useAppState();
+export const SidebarMenu = ({ items, isError }: SidebarMenuProps) => {
+  const { showSidebar, user } = useAppState();
 
-  const handleAddNewDocument = () => {
+  const handleAddNewDocument = async () => {
     const now = new Date();
     const tempID = `tempID_${now}_${now.getTime()}`;
-    useAppState.getState().addMarkdownItem({
+    const updatedMarkdown = {
       sys: {
         id: tempID,
       },
       createdAt: now.toISOString(),
       name: "untitled-file.md",
       content: "",
-    });
+    };
+    useAppState.getState().addMarkdownItem(updatedMarkdown);
     useAppState.getState().setActiveFileID(tempID);
+
+    if (!user) return;
+
+    try {
+      const res = await createMarkdown({
+        markdownItem: {
+          sys: {
+            id: tempID,
+          },
+          createdAt: now.toISOString(),
+          name: "untitled-file.md",
+          content: "",
+        },
+        userId: useAppState.getState().user?.id || "",
+      });
+
+      if (res.id) {
+        updatedMarkdown.sys.id = res.id;
+        useAppState.getState().updateMarkdownItem(tempID, updatedMarkdown);
+        useAppState.getState().setActiveFileID(res.id);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const sortedItems = useMemo(() => {
@@ -59,9 +79,7 @@ export const SidebarMenu = ({
           + New Document
         </button>
         <div aria-live="polite">
-          {isLoading ? (
-            <Loader />
-          ) : isError ? (
+          {isError ? (
             <p>Something went wrong retrieving files...</p>
           ) : (
             <ul className="flex flex-col gap-4">
