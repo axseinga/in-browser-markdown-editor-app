@@ -65,35 +65,37 @@ export const SidebarMenu = ({ items, isError }: SidebarMenuProps) => {
         showSidebar ? "translate-x-0" : "-translate-x-full"
       }`}
     >
-      <div className="flex flex-grow flex-col gap-7">
-        <p className="font-commissioner text-[0.938rem] font-semibold uppercase tracking-[5px] md:hidden">
-          Markdown
-        </p>
-        <p className="heading-s-in-app uppercase text-customGrey-500">
-          My documents
-        </p>
-        <button
-          onClick={handleAddNewDocument}
-          className="heading-m-in-app w-full rounded-md bg-customOrange px-4 py-3 hover:bg-customOrangeHover"
-        >
-          + New Document
-        </button>
-        <div aria-live="polite">
-          {isError ? (
-            <p>Something went wrong retrieving files...</p>
-          ) : (
-            <ul className="flex flex-col gap-4">
-              {sortedItems.map((item) => (
-                <SidebarMenuDocumentItem
-                  key={`SidebarMenuItem_${item.id}`}
-                  item={item}
-                />
-              ))}
-            </ul>
-          )}
+      <div className="flex h-[92vh] flex-col justify-between">
+        <div className="flex flex-grow flex-col gap-7">
+          <p className="font-commissioner text-[0.938rem] font-semibold uppercase tracking-[5px] md:hidden">
+            Markdown
+          </p>
+          <p className="heading-s-in-app uppercase text-customGrey-500">
+            My documents
+          </p>
+          <button
+            onClick={handleAddNewDocument}
+            className="heading-m-in-app w-full rounded-md bg-customOrange px-4 py-3 hover:bg-customOrangeHover"
+          >
+            + New Document
+          </button>
+          <div aria-live="polite">
+            {isError ? (
+              <p>Something went wrong retrieving files...</p>
+            ) : (
+              <ul className="flex flex-col gap-4">
+                {sortedItems.map((item) => (
+                  <SidebarMenuDocumentItem
+                    key={`SidebarMenuItem_${item.id}`}
+                    item={item}
+                  />
+                ))}
+              </ul>
+            )}
+          </div>
         </div>
+        <ThemeToggle id="theme-toggle" />
       </div>
-      <ThemeToggle id="theme-toggle" />
     </div>
   );
 };

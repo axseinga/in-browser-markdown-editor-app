@@ -78,7 +78,7 @@ export const FileNameEditor = ({ activeFile }: FileNameEditorProps) => {
   }, [inputRef, saveInputChange]);
 
   return (
-    <div className="flex w-[55vw] items-center gap-3 md:w-[36vw]">
+    <div className="flex items-center gap-3 sm:w-[55vw] md:w-[36vw]">
       <div className="flex-shrink-0">
         <IconDocument />
       </div>

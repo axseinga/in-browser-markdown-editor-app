@@ -46,7 +46,7 @@ export const MarkdownRewrite = ({ data }: MarkdownRewriteProps) => {
         ),
         blockquote: ({ children }) => {
           return (
-            <blockquote className="my-4 rounded border-l-4 border-customOrange bg-customGrey-200 px-5 text-white dark:bg-customGrey-800">
+            <blockquote className="my-4 rounded border-l-4 border-customOrange bg-customGrey-200 px-5 dark:bg-customGrey-800 dark:text-white">
               {React.Children.map(children, (child) => {
                 if (
                   React.isValidElement(child) &&
@@ -73,7 +73,7 @@ export const MarkdownRewrite = ({ data }: MarkdownRewriteProps) => {
         ),
         pre: ({ children, ...props }) => {
           return (
-            <pre className="overflow-x-auto rounded-md bg-customGrey-200 p-4 dark:bg-customGrey-800 ">
+            <pre className="overflow-x-auto rounded-md bg-customGrey-200 p-4 dark:bg-customGrey-800">
               <code className="rounded" {...props}>
                 {children}
               </code>
@@ -82,7 +82,7 @@ export const MarkdownRewrite = ({ data }: MarkdownRewriteProps) => {
         },
         code: ({ children, ...props }) => {
           return (
-            <code className="text-customGrey-700 text-white" {...props}>
+            <code className="text-customGrey-700 dark:text-white" {...props}>
               {children}
             </code>
           );

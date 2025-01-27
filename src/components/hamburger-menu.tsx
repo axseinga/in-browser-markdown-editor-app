@@ -4,7 +4,7 @@ export const HambugerMenu = () => {
   const { showSidebar } = useAppState();
   return (
     <button
-      className="flex h-14 w-14 items-center justify-center bg-customGrey-700 transition-colors duration-300 hover:bg-customOrange sm:h-[72px] sm:w-[72px]"
+      className="flex h-14 w-16 items-center justify-center bg-customGrey-700 transition-colors duration-300 hover:bg-customOrange sm:h-[72px] sm:w-[92px]"
       onClick={() => useAppState.getState().toggleSidebar()}
       aria-label="Toggle Menu"
     >

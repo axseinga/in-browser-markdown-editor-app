@@ -14,7 +14,7 @@ export const MarkdownWindow = ({
     <div className="text-customGrey-400 dark:border-customGrey-600 sm:border-r-2 sm:border-customGrey-300">
       <WindowHeading title="Markdown" hideToggleButtonOnDesktop />
       <TextareaAutosize
-        className="markdown h-screen w-full whitespace-pre-line bg-transparent p-5 focus:outline-none dark:caret-customOrange"
+        className="markdown h-screen w-full whitespace-pre-line bg-transparent p-5 focus:outline-none dark:caret-customOrange text-customGrey-700 dark:text-customGrey-400"
         value={contentInput}
         onChange={handleChange}
       />
