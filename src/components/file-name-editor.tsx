@@ -56,7 +56,11 @@ export const FileNameEditor = ({ activeFile }: FileNameEditorProps) => {
     e: React.KeyboardEvent<HTMLInputElement>,
   ) => {
     if (e.key === "Enter") {
-      saveInputChange();
+      try {
+        await saveInputChange();
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
