@@ -1,5 +1,5 @@
 import { MarkdownItemT } from "@/types";
-import { contentfulClient } from "./contentful-client";
+import { contentfulClient } from "@/services/api/contentful-client";
 
 export const createMarkdown = async ({
   markdownItem,

@@ -14,7 +14,7 @@ export const LogoutModalBody = ({ setIsModalOpen }: LogoutModalBodyProps) => {
   };
 
   return (
-    <div className="flex max-w-[21.438rem] flex-col gap-6 bg-white p-6">
+    <div className="flex max-w-[21.438rem] flex-col gap-6 bg-white p-6 dark:bg-customGrey-900 dark:text-customGrey-400">
       <p className="preview-h4 text-customGrey-700" id="dialog-description">
         Do you want to logout?
       </p>

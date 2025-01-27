@@ -1,5 +1,5 @@
 import { useAppState } from "@/state/app-state";
-import { IconShowHidePreview } from "./icons/icon-show-hide-preview";
+import { IconShowHidePreview } from "@/components/icons/icon-show-hide-preview";
 
 type WindowHeadingProps = {
   title: string;
@@ -11,10 +11,10 @@ export const WindowHeading = ({
   hideToggleButtonOnDesktop,
 }: WindowHeadingProps) => {
   const { showMarkdown } = useAppState();
-  
+
   return (
-    <div className="flex h-[2.625rem] w-full items-center justify-between bg-customGrey-200 px-5">
-      <p className="heading-s-in-app py-5 uppercase text-customGrey-500">
+    <div className="flex h-[2.625rem] w-full items-center justify-between bg-customGrey-200 px-5 dark:bg-customGrey-900">
+      <p className="heading-s-in-app py-5 uppercase text-customGrey-500 dark:text-customGrey-400">
         {title}
       </p>
       <button

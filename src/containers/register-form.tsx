@@ -37,7 +37,7 @@ export const RegisterForm = ({ setShowRegister }: LoginFormProps) => {
   return (
     <>
       {isFormSubmitted ? (
-        <p className="mt-2 flex flex-col items-center gap-4">
+        <p className="mt-2 flex flex-col items-center gap-4 dark:text-customGrey-400">
           <span className="preview-h6 text-xl">Success!</span>
           <span>Your account has been created.</span>
           <button

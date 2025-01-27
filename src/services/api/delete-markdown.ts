@@ -1,4 +1,4 @@
-import { contentfulClient } from "./contentful-client";
+import { contentfulClient } from "@/services/api/contentful-client";
 
 export const deleteMarkdown = async (markdownId: string) => {
   try {

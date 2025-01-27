@@ -4,6 +4,7 @@ import { DialogT, MarkdownItemT } from "@/types";
 import { FileNameEditor } from "@/components/file-name-editor";
 import { SaveFileChangesButton } from "@/components/save-file-changes-button";
 import { UserNavPanel } from "@/components/user-nav-panel";
+import { welcomeFile } from "@/data";
 
 type NavProps = {
   activeFile: MarkdownItemT;
@@ -31,8 +32,10 @@ export const Nav = ({ activeFile, setIsDialogOpen, setDialogId }: NavProps) => {
               setIsDialogOpen(true);
               setDialogId("deleteAction");
             }}
+            className={`${activeFile.sys.id === welcomeFile.sys.id ? "cursor-not-allowed" : ""}`}
+            disabled={activeFile.sys.id === welcomeFile.sys.id}
           >
-            <IconDelete />
+            <IconDelete disabled={activeFile.sys.id === welcomeFile.sys.id} />
           </button>
           <SaveFileChangesButton
             activeFile={activeFile}

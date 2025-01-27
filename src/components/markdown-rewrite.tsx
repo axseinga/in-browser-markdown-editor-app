@@ -10,11 +10,21 @@ export const MarkdownRewrite = ({ data }: MarkdownRewriteProps) => {
     <ReactMarkdown
       children={data}
       components={{
-        h1: ({ ...props }) => <h1 className="preview-h1" {...props} />,
-        h2: ({ ...props }) => <h2 className="preview-h2" {...props} />,
-        h3: ({ ...props }) => <h2 className="preview-h3" {...props} />,
-        h4: ({ ...props }) => <h2 className="preview-h4" {...props} />,
-        h5: ({ ...props }) => <h2 className="preview-h5" {...props} />,
+        h1: ({ ...props }) => (
+          <h1 className="preview-h1 dark:text-white" {...props} />
+        ),
+        h2: ({ ...props }) => (
+          <h2 className="preview-h2 dark:text-white" {...props} />
+        ),
+        h3: ({ ...props }) => (
+          <h2 className="preview-h3 dark:text-white" {...props} />
+        ),
+        h4: ({ ...props }) => (
+          <h2 className="preview-h4 dark:text-white" {...props} />
+        ),
+        h5: ({ ...props }) => (
+          <h2 className="preview-h5 dark:text-white" {...props} />
+        ),
         h6: ({ ...props }) => <h2 className="preview-h6" {...props} />,
         p: ({ ...props }) => (
           <p className="preview-paragraph text-customGrey-500" {...props} />
@@ -36,7 +46,7 @@ export const MarkdownRewrite = ({ data }: MarkdownRewriteProps) => {
         ),
         blockquote: ({ children }) => {
           return (
-            <blockquote className="my-4 rounded border-l-4 border-customOrange bg-customGrey-200 px-5">
+            <blockquote className="my-4 rounded border-l-4 border-customOrange bg-customGrey-200 px-5 text-white dark:bg-customGrey-800">
               {React.Children.map(children, (child) => {
                 if (
                   React.isValidElement(child) &&
@@ -63,7 +73,7 @@ export const MarkdownRewrite = ({ data }: MarkdownRewriteProps) => {
         ),
         pre: ({ children, ...props }) => {
           return (
-            <pre className="overflow-x-auto rounded-md bg-customGrey-200 p-4">
+            <pre className="overflow-x-auto rounded-md bg-customGrey-200 p-4 dark:bg-customGrey-800 ">
               <code className="rounded" {...props}>
                 {children}
               </code>
@@ -72,7 +82,7 @@ export const MarkdownRewrite = ({ data }: MarkdownRewriteProps) => {
         },
         code: ({ children, ...props }) => {
           return (
-            <code className="text-customGrey-700" {...props}>
+            <code className="text-customGrey-700 text-white" {...props}>
               {children}
             </code>
           );

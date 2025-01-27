@@ -1,8 +1,9 @@
 import { IconDocument } from "@/components/icons/icon-document";
+import { welcomeFile } from "@/data";
 import { updateMarkdownName } from "@/services/api/update-markdown-name";
 import { useAppState } from "@/state/app-state";
 import { MarkdownItemT } from "@/types";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type FileNameEditorProps = {
   activeFile: MarkdownItemT;
@@ -12,6 +13,9 @@ export const FileNameEditor = ({ activeFile }: FileNameEditorProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [docNameInput, setDocNameInput] = useState(activeFile.name);
   const { activeFileID, user } = useAppState();
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  console.log(isEditing);
 
   useEffect(() => {
     setDocNameInput(activeFile.name);
@@ -54,6 +58,19 @@ export const FileNameEditor = ({ activeFile }: FileNameEditorProps) => {
     }
   };
 
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (inputRef.current && !inputRef.current.contains(e.target as Node)) {
+        setIsEditing(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [inputRef]);
+
   return (
     <div className="flex w-[55vw] items-center gap-3 md:w-[36vw]">
       <div className="flex-shrink-0">
@@ -69,7 +86,7 @@ export const FileNameEditor = ({ activeFile }: FileNameEditorProps) => {
           {isEditing ? (
             <input
               type="text"
-              className="w-full bg-transparent"
+              className="w-full bg-transparent caret-customOrange focus:outline-none focus:ring-2 focus:ring-customOrangeHover"
               value={docNameInput}
               onChange={handleInputChange}
               onKeyDown={handleSaveInputChange}
@@ -77,7 +94,8 @@ export const FileNameEditor = ({ activeFile }: FileNameEditorProps) => {
           ) : (
             <button
               onClick={() => setIsEditing(true)}
-              className="transition-colors duration-300 hover:border-b-[1px] hover:text-customOrange"
+              disabled={activeFile.sys.id === welcomeFile.sys.id}
+              className={`${activeFile.sys.id === welcomeFile.sys.id ? "cursor-not-allowed" : "cursor-pointer transition-colors duration-300 hover:border-b-[1px] hover:text-customOrange"}`}
             >
               <p className="translate-y-[2px] transform">{docNameInput}</p>
             </button>

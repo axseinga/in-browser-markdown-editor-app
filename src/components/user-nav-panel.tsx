@@ -1,4 +1,4 @@
-import { IconLogin } from "./icons/icon-login";
+import { IconLogin } from "@/components/icons/icon-login";
 import { useAppState } from "@/state/app-state";
 import { DialogT } from "@/types";
 

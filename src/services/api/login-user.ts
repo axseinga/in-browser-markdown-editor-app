@@ -1,6 +1,6 @@
-import { getUserByEmailQuery } from "../graphql/queries/get-user-by-email";
+import { getUserByEmailQuery } from "@/services/graphql/queries/get-user-by-email";
 import bcrypt from "bcryptjs";
-import { contentfulGraphQLClient } from "../graphql/contentful-client";
+import { contentfulGraphQLClient } from "@/services/graphql/contentful-client";
 import { UserCollectionResponse } from "@/types";
 
 export const loginUser = async ({

@@ -1,5 +1,5 @@
 import bcrypt from "bcryptjs";
-import { contentfulClient } from "./contentful-client";
+import { contentfulClient } from "@/services/api/contentful-client";
 
 export const registerUser = async ({
   name,

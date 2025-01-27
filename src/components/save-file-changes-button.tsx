@@ -1,4 +1,5 @@
 import { IconSave } from "@/components/icons/icon-save";
+import { welcomeFile } from "@/data";
 import { updateMarkdownContent } from "@/services/api/update-markdown-content";
 import { useAppState } from "@/state/app-state";
 import { DialogT, MarkdownItemT } from "@/types";
@@ -45,7 +46,8 @@ export const SaveFileChangesButton = ({
   return (
     <button
       onClick={handleSaveFileChanges}
-      className="ml-4 flex items-center gap-2 rounded-md bg-customOrange p-3 transition-all duration-300 hover:bg-customOrangeHover sm:px-4 md:min-w-[150px]"
+      className={`ml-4 flex items-center gap-2 rounded-md bg-customOrange p-3 sm:px-4 md:min-w-[150px] ${activeFile.sys.id === welcomeFile.sys.id ? "cursor-not-allowed" : "cursor-pointer transition-all duration-300 hover:bg-customOrangeHover"}`}
+      disabled={activeFile.sys.id === welcomeFile.sys.id}
     >
       <IconSave />
       <p className="heading-m-in-app hidden font-light sm:flex">Save Changes</p>

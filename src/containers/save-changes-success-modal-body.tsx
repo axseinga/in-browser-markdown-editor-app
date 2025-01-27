@@ -8,8 +8,8 @@ export const SaveChangesSuccessModalBody = ({
   fileName,
 }: SaveChangesSuccessModalBodyProps) => {
   return (
-    <div className="flex max-w-[21.438rem] flex-col gap-3 bg-white p-6">
-      <p className="preview-h4 text-center text-customGrey-700">
+    <div className="flex max-w-[21.438rem] flex-col gap-3 bg-white p-6 dark:bg-customGrey-900">
+      <p className="preview-h4 text-center text-customGrey-700 dark:text-customGrey-400">
         The ‘{fileName}’ document has been saved.
       </p>
       <button

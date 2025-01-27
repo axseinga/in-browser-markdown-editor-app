@@ -67,7 +67,7 @@ export const Modal = ({ isOpen, setIsModalOpen, id, children }: ModalProps) => {
       id={id}
       aria-modal={isOpen ? "true" : "false"}
       aria-describedby="dialog-description"
-      className="fixed left-0 top-0 m-auto rounded-md backdrop:bg-[rgba(0,0,0,0.7)]"
+      className="fixed left-0 top-0 m-auto rounded-md backdrop:bg-[rgba(0,0,0,0.7)] dark:backdrop:bg-[rgba(62,62,62,0.7)]"
       ref={dialogRef}
       onClose={() => setIsModalOpen(false)}
     >

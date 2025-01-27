@@ -24,7 +24,7 @@ const App = () => {
 
   return (
     <>
-      <div className="relative flex overflow-hidden">
+      <div className="relative flex overflow-hidden dark:bg-customBlack">
         <SidebarMenu
           items={markdownItems.map((file) => {
             return {

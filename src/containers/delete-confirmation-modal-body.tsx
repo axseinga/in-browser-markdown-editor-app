@@ -40,19 +40,19 @@ export const DeleteConfirmationModalBody = ({
 
   return (
     <div
-      className="flex max-w-[21.438rem] flex-col gap-3 bg-white p-6"
+      className="flex max-w-[21.438rem] flex-col gap-3 bg-white p-6 dark:bg-customGrey-900"
       aria-live="polite"
     >
       {success ? (
-        <p className="preview-h4 text-center text-customGrey-700">
+        <p className="preview-h4 text-center text-customGrey-700 dark:text-white">
           The ‘{deletedFileName}’ document has been deleted.
         </p>
       ) : (
         <>
-          <p className="preview-h4 text-customGrey-700" id="dialog-description">
+          <p className="preview-h4 text-customGrey-700 dark:text-white" id="dialog-description">
             Delete this document?
           </p>
-          <p className="preview-paragraph text-customGrey-500">
+          <p className="preview-paragraph text-customGrey-500 dark:text-customGrey-400">
             Are you sure you want to delete the{" "}
             <span className="font-semibold">‘{deletedFileName}’</span> document
             and its contents? This action cannot be reversed.
