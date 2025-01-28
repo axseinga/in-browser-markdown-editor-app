@@ -1,6 +1,6 @@
 import { IconDocument } from "@/components/icons/icon-document";
 import { welcomeFile } from "@/data";
-import { updateMarkdownName } from "@/services/api/update-markdown-name";
+import { updateMarkdownName } from "@/services/api/markdown/update-markdown-name";
 import { useAppState } from "@/state/app-state";
 import { MarkdownItemT } from "@/types";
 import { useCallback, useEffect, useRef, useState } from "react";

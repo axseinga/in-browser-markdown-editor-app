@@ -1,10 +1,10 @@
 import { FormTypes } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { TextInput } from "@/components/text-input";
 import { registerSchema } from "@/utils/form-schemas/register-schema";
-import { registerUser } from "@/services/api/register-user";
+import { registerUser } from "@/services/api/user/register-user";
 
 type LoginFormProps = {
   setShowRegister: (showRegister: boolean) => void;
@@ -13,6 +13,7 @@ type LoginFormProps = {
 
 export const RegisterForm = ({ setShowRegister }: LoginFormProps) => {
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
+  const [error, setError] = useState("");
   const {
     register,
     handleSubmit,
@@ -24,15 +25,28 @@ export const RegisterForm = ({ setShowRegister }: LoginFormProps) => {
 
   const onSubmit = async (formData: FormTypes) => {
     try {
+      setError("");
       const res = await registerUser(formData);
+      console.log(res);
       if (res && res.status === 200) {
         reset();
         setIsFormSubmitted(true);
+      } else {
+        setError(res.message);
       }
     } catch (err) {
       console.error(err);
+      setError("Something went wrong. Please try again later.");
     }
   };
+
+  useEffect(() => {
+    if (error) {
+      setTimeout(() => {
+        setError("");
+      }, 5000);
+    }
+  }, [error]);
 
   return (
     <>
@@ -49,6 +63,12 @@ export const RegisterForm = ({ setShowRegister }: LoginFormProps) => {
         </p>
       ) : (
         <>
+          <p
+            aria-live="polite"
+            className="body-in-app mt-1 h-4 py-1 text-red-600 dark:text-red-400"
+          >
+            {error !== "" && error}
+          </p>
           <form
             noValidate
             onSubmit={handleSubmit(onSubmit)}

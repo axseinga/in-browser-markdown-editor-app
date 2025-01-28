@@ -1,4 +1,4 @@
-import { deleteMarkdown } from "@/services/api/delete-markdown";
+import { deleteMarkdown } from "@/services/api/markdown/delete-markdown";
 import { useAppState } from "@/state/app-state";
 import { useEffect, useState } from "react";
 
@@ -19,7 +19,7 @@ export const DeleteConfirmationModalBody = ({
   const handleDeleteDocument = async (id: string) => {
     try {
       setDeletedFileName(fileName);
-      await deleteMarkdown(id);
+      await deleteMarkdown({ markdownId: id });
       setSuccess(true);
       useAppState.getState().deleteMarkdownItem(activeFileID);
     } catch (err) {
@@ -49,7 +49,10 @@ export const DeleteConfirmationModalBody = ({
         </p>
       ) : (
         <>
-          <p className="preview-h4 text-customGrey-700 dark:text-white" id="dialog-description">
+          <p
+            className="preview-h4 text-customGrey-700 dark:text-white"
+            id="dialog-description"
+          >
             Delete this document?
           </p>
           <p className="preview-paragraph text-customGrey-500 dark:text-customGrey-400">

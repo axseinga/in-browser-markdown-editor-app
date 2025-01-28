@@ -3,7 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { TextInput } from "@/components/text-input";
 import { loginSchema } from "@/utils/form-schemas/login-schema";
-import { loginUser } from "@/services/api/login-user";
+import { loginUser } from "@/services/api/user/login-user";
 import { useState } from "react";
 import { useAppState } from "@/state/app-state";
 

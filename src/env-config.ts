@@ -5,6 +5,7 @@ const env = z.object({
   VITE_CONTENTFUL_ENVIRONMENT: z.string(),
   VITE_CONTENTFUL_TOKEN: z.string(),
   VITE_CONTENTFUL_CMA_TOKEN: z.string(),
+  VITE_NETLIFY_SERVERLESS_FUNCTIONS_URL: z.string(),
 });
 
 const envConfig = {
@@ -12,6 +13,8 @@ const envConfig = {
   CONTENTFUL_ENVIRONMENT: import.meta.env.VITE_CONTENTFUL_ENVIRONMENT,
   CONTENTFUL_TOKEN: import.meta.env.VITE_CONTENTFUL_TOKEN,
   CONTENTFUL_CMA_TOKEN: import.meta.env.VITE_CONTENTFUL_CMA_TOKEN,
+  NETLIFY_SERVERLESS_FUNCTIONS_URL: import.meta.env
+    .VITE_NETLIFY_SERVERLESS_FUNCTIONS_URL,
 };
 
 if (typeof window === "undefined") {

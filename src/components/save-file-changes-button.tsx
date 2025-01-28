@@ -1,6 +1,6 @@
 import { IconSave } from "@/components/icons/icon-save";
 import { welcomeFile } from "@/data";
-import { updateMarkdownContent } from "@/services/api/update-markdown-content";
+import { updateMarkdownContent } from "@/services/api/markdown/update-markdown-content";
 import { useAppState } from "@/state/app-state";
 import { DialogT, MarkdownItemT } from "@/types";
 

@@ -1,27 +1,27 @@
 import { useEffect, useState } from "react";
-import { contentfulGraphQLClient } from "@/services/graphql/contentful-client";
-import { getMarkdownsQuery } from "@/services/graphql/queries/get-markdowns-by-email";
-import { MarkdownCollectionResponse } from "@/types";
 import { welcomeFile } from "@/data";
 import { useAppState } from "@/state/app-state";
+import { getAllUserMarkdowns } from "@/services/api/markdown/get-all-user-markdowns";
 
 export const useFetchMarkdownCollection = (email: string) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<boolean>(false);
 
   useEffect(() => {
+    if (!email) {
+      return;
+    }
     const fetchMarkdownCollection = async (email: string) => {
       try {
         setIsLoading(true);
-        const variables = { email };
-        const data = await contentfulGraphQLClient.request<MarkdownCollectionResponse>(
-          getMarkdownsQuery,
-          variables,
-        );
-  
-        const items = data?.markdownCollection?.items ?? [];
-        const itemsWithInitialFile = [...items, welcomeFile];
-        useAppState.getState().setMarkdownItems(itemsWithInitialFile);
+        const res = await getAllUserMarkdowns({ email });
+
+        if (res.status === 200) {
+          const itemsWithInitialFile = [...res.data, welcomeFile];
+          useAppState.getState().setMarkdownItems(itemsWithInitialFile);
+        } else {
+          useAppState.getState().setMarkdownItems([welcomeFile]);
+        }
       } catch (error) {
         console.log(error);
         setError(true);
@@ -32,7 +32,6 @@ export const useFetchMarkdownCollection = (email: string) => {
     };
 
     fetchMarkdownCollection(email);
-
   }, [email]);
 
   return { isLoading, error };

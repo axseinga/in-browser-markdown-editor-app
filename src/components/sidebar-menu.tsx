@@ -5,7 +5,7 @@ import { MarkdownMenuItem } from "@/types";
 import { formatDate } from "@/utils/format-date";
 import { useMemo } from "react";
 import { sortMarkdownsByDate } from "@/utils/sort-markdowns-by-date";
-import { createMarkdown } from "@/services/api/create-markdown";
+import { createMarkdown } from "@/services/api/markdown/create-markdown";
 
 type SidebarMenuProps = {
   items: MarkdownMenuItem[];
@@ -44,10 +44,10 @@ export const SidebarMenu = ({ items, isError }: SidebarMenuProps) => {
         userId: useAppState.getState().user?.id || "",
       });
 
-      if (res.id) {
-        updatedMarkdown.sys.id = res.id;
+      if (res.data.id) {
+        updatedMarkdown.sys.id = res.data.id;
         useAppState.getState().updateMarkdownItem(tempID, updatedMarkdown);
-        useAppState.getState().setActiveFileID(res.id);
+        useAppState.getState().setActiveFileID(res.data.id);
       }
     } catch (error) {
       console.log(error);

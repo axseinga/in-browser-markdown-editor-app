@@ -6,9 +6,9 @@ import { welcomeFile } from "@/data";
 import { Modal } from "@/components/modal";
 import { MarkdownEditor } from "@/containers/markdown-editor";
 import { DialogT } from "@/types";
-import { useFetchMarkdownCollection } from "@/services/api/use-fetch-markdown-collection";
+import { useFetchMarkdownCollection } from "@/hooks/use-fetch-markdown-collection";
 import { ModalBody } from "@/containers/modal-body";
-import { useBlockOverflow } from "./hooks/useBlockOverflow";
+import { useBlockOverflow } from "./hooks/use-block-overflow";
 
 const App = () => {
   const { showSidebar, showMarkdown, activeFileID, markdownItems, user } =
