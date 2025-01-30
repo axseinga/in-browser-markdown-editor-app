@@ -12,7 +12,7 @@ import { useBlockOverflow } from "./hooks/use-block-overflow";
 
 const App = () => {
   const { showSidebar, showMarkdown, activeFileID, markdownItems, user } =
-    useAppState();
+    useAppState((state) => state);
   const [dialogId, setDialogId] = useState<DialogT>("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { error } = useFetchMarkdownCollection(user?.email ?? "");

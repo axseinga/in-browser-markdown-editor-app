@@ -7,6 +7,8 @@ type AppStateT = {
   setUser: (user: UserT | null) => void;
   theme: "light" | "dark";
   setTheme: (theme: "light" | "dark") => void;
+  isDialogOpen: boolean;
+  setIsDialogOpen: (isDialogOpen: boolean) => void;
   showMarkdown: boolean;
   toggleShowMarkdown: () => void;
   showSidebar: boolean;
@@ -28,6 +30,8 @@ export const useAppState = create<AppStateT>()((set) => {
     setUser: (user) => set({ user }),
     theme: "light",
     setTheme: (theme) => set({ theme }),
+    isDialogOpen: false,
+    setIsDialogOpen: (isDialogOpen) => set({ isDialogOpen }),
     showMarkdown: true,
     toggleShowMarkdown: () =>
       set((state) => ({ showMarkdown: !state.showMarkdown })),

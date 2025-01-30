@@ -10,7 +10,7 @@ export const WindowHeading = ({
   title,
   hideToggleButtonOnDesktop,
 }: WindowHeadingProps) => {
-  const { showMarkdown } = useAppState();
+  const { showMarkdown, toggleShowMarkdown } = useAppState((state) => state);
 
   return (
     <div className="flex h-[2.625rem] w-full items-center justify-between bg-customGrey-200 pl-5 pr-1 dark:bg-customGrey-900">
@@ -18,7 +18,7 @@ export const WindowHeading = ({
         {title}
       </p>
       <button
-        onClick={() => useAppState.getState().toggleShowMarkdown()}
+        onClick={() => toggleShowMarkdown()}
         className={`flex h-[2.2rem] w-[2.2rem] items-center justify-center ${hideToggleButtonOnDesktop ? "md:hidden" : ""}`}
       >
         <IconShowHidePreview show={showMarkdown} />

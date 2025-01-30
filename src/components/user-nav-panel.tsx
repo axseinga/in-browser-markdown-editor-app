@@ -11,7 +11,7 @@ export const UserNavPanel = ({
   setIsDialogOpen,
   setDialogId,
 }: UserNavProps) => {
-  const { user } = useAppState();
+  const { user } = useAppState((state) => state);
   return (
     <>
       {user ? (

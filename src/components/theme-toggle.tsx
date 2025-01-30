@@ -9,6 +9,7 @@ type ThemeToggleProps = {
 
 export const ThemeToggle = ({ id }: ThemeToggleProps) => {
   const [isChecked, setIsChecked] = useState(true);
+  const { setTheme } = useAppState((state) => state);
 
   useEffect(() => {
     const userPrefersDark = window.matchMedia(
@@ -30,7 +31,7 @@ export const ThemeToggle = ({ id }: ThemeToggleProps) => {
     } else {
       document.documentElement.classList.remove("dark");
     }
-    useAppState.getState().setTheme(theme);
+    setTheme(theme);
   };
 
   return (

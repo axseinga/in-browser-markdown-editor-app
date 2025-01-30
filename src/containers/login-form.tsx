@@ -16,6 +16,7 @@ export const LoginForm = ({
   setShowRegister,
   setIsModalOpen,
 }: LoginFormProps) => {
+  const { setUser } = useAppState((state) => state);
   const {
     register,
     handleSubmit,
@@ -30,7 +31,7 @@ export const LoginForm = ({
     try {
       const isUserLoggedIn = await loginUser(formData);
       if (isUserLoggedIn.status === 200 && isUserLoggedIn.data) {
-        useAppState.getState().setUser({
+        setUser({
           email: isUserLoggedIn.data.email,
           name: isUserLoggedIn.data.name,
           id: isUserLoggedIn.data.sys.id,

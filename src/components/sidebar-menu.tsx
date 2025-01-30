@@ -5,7 +5,7 @@ import { MarkdownMenuItem } from "@/types";
 import { formatDate } from "@/utils/format-date";
 import { useMemo } from "react";
 import { sortMarkdownsByDate } from "@/utils/sort-markdowns-by-date";
-import { createMarkdown } from "@/services/api/markdown/create-markdown";
+import { useAddNewDocument } from "@/hooks/use-add-new-document";
 
 type SidebarMenuProps = {
   items: MarkdownMenuItem[];
@@ -13,50 +13,11 @@ type SidebarMenuProps = {
 };
 
 export const SidebarMenu = ({ items, isError }: SidebarMenuProps) => {
-  const { showSidebar, user } = useAppState();
-
-  const handleAddNewDocument = async () => {
-    const now = new Date();
-    const tempID = `tempID_${now}_${now.getTime()}`;
-    const updatedMarkdown = {
-      sys: {
-        id: tempID,
-      },
-      createdAt: now.toISOString(),
-      name: "untitled-file.md",
-      content: "",
-    };
-    useAppState.getState().addMarkdownItem(updatedMarkdown);
-    useAppState.getState().setActiveFileID(tempID);
-
-    if (!user) return;
-
-    try {
-      const res = await createMarkdown({
-        markdownItem: {
-          sys: {
-            id: tempID,
-          },
-          createdAt: now.toISOString(),
-          name: "untitled-file.md",
-          content: "",
-        },
-        userId: useAppState.getState().user?.id || "",
-      });
-
-      if (res.data.id) {
-        updatedMarkdown.sys.id = res.data.id;
-        useAppState.getState().updateMarkdownItem(tempID, updatedMarkdown);
-        useAppState.getState().setActiveFileID(res.data.id);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const { showSidebar } = useAppState((state) => state);
+  const { addNewDocument } = useAddNewDocument();
 
   const sortedItems = useMemo(() => {
-    const sorted = sortMarkdownsByDate(items) as MarkdownMenuItem[];
-    return sorted;
+    return sortMarkdownsByDate(items) as MarkdownMenuItem[];
   }, [items]);
 
   return (
@@ -74,7 +35,7 @@ export const SidebarMenu = ({ items, isError }: SidebarMenuProps) => {
             My documents
           </p>
           <button
-            onClick={handleAddNewDocument}
+            onClick={addNewDocument}
             className="heading-m-in-app w-full rounded-md bg-customOrange px-4 py-3 hover:bg-customOrangeHover"
           >
             + New Document
@@ -105,12 +66,14 @@ type SidebarMenuDocumentItemProps = {
 };
 
 const SidebarMenuDocumentItem = ({ item }: SidebarMenuDocumentItemProps) => {
+  const { setActiveFileID } = useAppState((state) => state);
   const date = formatDate(item.createdAt);
+
   return (
     <li className="flex shrink-0">
       <button
         className="flex shrink-0 items-center gap-4 hover:text-customOrange"
-        onClick={() => useAppState.getState().setActiveFileID(item.id)}
+        onClick={() => setActiveFileID(item.id)}
       >
         <IconDocument />
         <div className="flex flex-col text-left">

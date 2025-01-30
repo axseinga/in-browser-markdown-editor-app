@@ -11,7 +11,13 @@ export const DeleteConfirmationModalBody = ({
   setIsModalOpen,
   fileName,
 }: DeleteConfirmationModalBodyProps) => {
-  const { activeFileID, markdownItems } = useAppState();
+  const {
+    activeFileID,
+    markdownItems,
+    user,
+    deleteMarkdownItem,
+    setActiveFileID,
+  } = useAppState((state) => state);
   const [error, setError] = useState(false);
   const [success, setSuccess] = useState(false);
   const [deletedFileName, setDeletedFileName] = useState(fileName);
@@ -19,9 +25,12 @@ export const DeleteConfirmationModalBody = ({
   const handleDeleteDocument = async (id: string) => {
     try {
       setDeletedFileName(fileName);
-      await deleteMarkdown({ markdownId: id });
-      setSuccess(true);
-      useAppState.getState().deleteMarkdownItem(activeFileID);
+      deleteMarkdownItem(activeFileID);
+
+      if (user) {
+        await deleteMarkdown({ markdownId: id });
+        setSuccess(true);
+      }
     } catch (err) {
       console.error(err);
       setError(true);
@@ -31,12 +40,12 @@ export const DeleteConfirmationModalBody = ({
   useEffect(() => {
     if (success) {
       setTimeout(() => {
-        useAppState.getState().setActiveFileID(markdownItems[0].sys.id);
+        setActiveFileID(markdownItems[0].sys.id);
         setIsModalOpen(false);
         setSuccess(false);
       }, 2000);
     }
-  }, [success, setIsModalOpen, markdownItems]);
+  }, [success, setIsModalOpen, markdownItems, setActiveFileID]);
 
   return (
     <div

@@ -10,17 +10,7 @@ type ModalProps = {
 export const Modal = ({ isOpen, setIsModalOpen, id, children }: ModalProps) => {
   const dialogRef = useRef<HTMLDialogElement>(null);
 
-  useEffect(() => {
-    if (!dialogRef.current) return;
-
-    if (isOpen) {
-      dialogRef.current.showModal();
-    } else {
-      dialogRef.current.close();
-    }
-  }, [isOpen]);
-
-  const handleCloseDialogEvent = useCallback(
+  const handleCloseDialog = useCallback(
     (e: MouseEvent) => {
       if (dialogRef.current && e.target === dialogRef.current) {
         setIsModalOpen(false);
@@ -34,25 +24,26 @@ export const Modal = ({ isOpen, setIsModalOpen, id, children }: ModalProps) => {
     if (!dialogRef.current) return;
     const dialogElement = dialogRef.current;
 
-    dialogElement?.addEventListener("click", (e) => handleCloseDialogEvent(e));
+    dialogElement?.addEventListener("click", (e) => handleCloseDialog(e));
 
     return () =>
-      dialogElement?.removeEventListener("click", (e) =>
-        handleCloseDialogEvent(e),
-      );
-  }, [handleCloseDialogEvent]);
+      dialogElement?.removeEventListener("click", (e) => handleCloseDialog(e));
+  }, [handleCloseDialog]);
 
   useEffect(() => {
     const body = document.getElementsByTagName("body")?.[0];
     const scrollBarWidth = window.innerWidth - document.body.offsetWidth;
     if (body === null) return;
+    if (!dialogRef.current) return;
 
     if (isOpen) {
       body.style.overflow = "hidden";
       body.style.paddingRight = `${scrollBarWidth}px`;
+      dialogRef.current.showModal();
     } else {
       body.style.overflow = "auto";
       body.style.paddingRight = `0px`;
+      dialogRef.current.close();
     }
 
     return () => {

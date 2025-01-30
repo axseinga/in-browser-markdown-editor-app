@@ -14,12 +14,11 @@ export const MarkdownEditor = ({
   activeFile,
 }: MarkdownEditorProps) => {
   const [contentInput, setContentInput] = useState(activeFile.content);
-
-  const { activeFileID } = useAppState();
+  const { activeFileID, setEditingContent } = useAppState((state) => state);
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setContentInput(e.target.value);
-    useAppState.getState().setEditingContent(e.target.value);
+    setEditingContent(e.target.value);
   };
 
   useEffect(() => {

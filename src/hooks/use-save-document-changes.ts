@@ -1,20 +1,14 @@
-import { IconSave } from "@/components/icons/icon-save";
-import { welcomeFile } from "@/data";
 import { updateMarkdownContent } from "@/services/api/markdown/update-markdown-content";
 import { useAppState } from "@/state/app-state";
-import { DialogT, MarkdownItemT } from "@/types";
+import { MarkdownItemT } from "@/types";
 
-type SaveFileChangesButtonProps = {
+type UseSaveDocumentChangesProps = {
   activeFile: MarkdownItemT;
-  setDialogId: (id: DialogT) => void;
-  setIsDialogOpen: (isOpen: boolean) => void;
 };
 
-export const SaveFileChangesButton = ({
+export const useSaveDocumentChanges = ({
   activeFile,
-  setDialogId,
-  setIsDialogOpen,
-}: SaveFileChangesButtonProps) => {
+}: UseSaveDocumentChangesProps) => {
   const { activeFileID, editingContent, user, updateMarkdownItem } =
     useAppState((state) => state);
 
@@ -43,15 +37,4 @@ export const SaveFileChangesButton = ({
       setIsDialogOpen(true);
     }, 500);
   };
-
-  return (
-    <button
-      onClick={saveFileChanges}
-      className={`ml-1 flex items-center gap-2 rounded-md bg-customOrange p-3 sm:ml-4 sm:px-4 md:min-w-[150px] ${activeFile.sys.id === welcomeFile.sys.id ? "cursor-not-allowed" : "cursor-pointer transition-all duration-300 hover:bg-customOrangeHover"}`}
-      disabled={activeFile.sys.id === welcomeFile.sys.id}
-    >
-      <IconSave />
-      <p className="heading-m-in-app hidden font-light sm:flex">Save Changes</p>
-    </button>
-  );
 };

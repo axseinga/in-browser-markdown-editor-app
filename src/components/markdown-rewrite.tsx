@@ -2,13 +2,13 @@ import React from "react";
 import ReactMarkdown from "react-markdown";
 
 type MarkdownRewriteProps = {
-  data: string;
+  content: string;
 };
 
-export const MarkdownRewrite = ({ data }: MarkdownRewriteProps) => {
+export const MarkdownRewrite = ({ content }: MarkdownRewriteProps) => {
   return (
     <ReactMarkdown
-      children={data}
+      children={content}
       components={{
         h1: ({ ...props }) => (
           <h1 className="preview-h1 dark:text-white" {...props} />

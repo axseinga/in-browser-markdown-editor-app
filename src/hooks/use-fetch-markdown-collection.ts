@@ -4,6 +4,7 @@ import { useAppState } from "@/state/app-state";
 import { getAllUserMarkdowns } from "@/services/api/markdown/get-all-user-markdowns";
 
 export const useFetchMarkdownCollection = (email: string) => {
+  const { setMarkdownItems } = useAppState((state) => state);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<boolean>(false);
 
@@ -18,21 +19,21 @@ export const useFetchMarkdownCollection = (email: string) => {
 
         if (res.status === 200) {
           const itemsWithInitialFile = [...res.data, welcomeFile];
-          useAppState.getState().setMarkdownItems(itemsWithInitialFile);
+          setMarkdownItems(itemsWithInitialFile);
         } else {
-          useAppState.getState().setMarkdownItems([welcomeFile]);
+          setMarkdownItems([welcomeFile]);
         }
       } catch (error) {
         console.log(error);
         setError(true);
-        useAppState.getState().setMarkdownItems([welcomeFile]);
+        setMarkdownItems([welcomeFile]);
       } finally {
         setIsLoading(false);
       }
     };
 
     fetchMarkdownCollection(email);
-  }, [email]);
+  }, [email, setMarkdownItems]);
 
   return { isLoading, error };
 };

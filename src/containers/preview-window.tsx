@@ -7,14 +7,14 @@ type PreviewWindowProps = {
 };
 
 export const PreviewWindow = ({ data }: PreviewWindowProps) => {
-  const { showMarkdown } = useAppState();
+  const { showMarkdown } = useAppState((state) => state);
   return (
-    <div className="flex flex-col justify-stretch h-full">
+    <div className="flex h-full flex-col justify-stretch">
       <WindowHeading title="Preview" />
       <div
-        className={`markdown h-full whitespace-pre-line p-5 ${!showMarkdown ? "max-w-[45rem] m-auto" : ""}`}
+        className={`markdown h-full whitespace-pre-line p-5 ${!showMarkdown ? "m-auto w-full max-w-[45rem]" : ""}`}
       >
-        <MarkdownRewrite data={data} />
+        <MarkdownRewrite content={data} />
       </div>
     </div>
   );

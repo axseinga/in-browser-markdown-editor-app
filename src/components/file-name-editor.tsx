@@ -11,36 +11,32 @@ type FileNameEditorProps = {
 
 export const FileNameEditor = ({ activeFile }: FileNameEditorProps) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [docNameInput, setDocNameInput] = useState(activeFile.name);
-  const { activeFileID, user } = useAppState();
+  const [fileName, setFileName] = useState(activeFile.name);
+  const { activeFileID, user, updateMarkdownItem } = useAppState(
+    (state) => state,
+  );
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    setDocNameInput(activeFile.name);
-  }, [activeFile.name]);
-
-  useEffect(() => {
-    setDocNameInput(activeFile.name);
-  }, [activeFileID]);
+    setFileName(activeFile.name);
+  }, [activeFile.name, activeFileID]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setDocNameInput(e.target.value);
+    setFileName(e.target.value);
   };
 
-  const saveInputChange = useCallback(async () => {
+  const saveFileNameChange = useCallback(async () => {
     const updatedMarkdownItem = {
       ...activeFile,
-      name: docNameInput,
+      name: fileName,
     };
-    useAppState
-      .getState()
-      .updateMarkdownItem(activeFileID, updatedMarkdownItem);
+    updateMarkdownItem(activeFileID, updatedMarkdownItem);
     setIsEditing(false);
 
     if (user) {
       try {
         const response = await updateMarkdownName({
-          newMarkdownName: docNameInput,
+          newMarkdownName: fileName,
           markdownId: activeFileID,
         });
         if (response.status !== 200) {
@@ -50,32 +46,33 @@ export const FileNameEditor = ({ activeFile }: FileNameEditorProps) => {
         console.log(error);
       }
     }
-  }, [activeFile, activeFileID, docNameInput, user]);
+  }, [activeFile, activeFileID, fileName, user, updateMarkdownItem]);
 
-  const handleSaveInputChange = async (
-    e: React.KeyboardEvent<HTMLInputElement>,
-  ) => {
+  const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       try {
-        await saveInputChange();
+        await saveFileNameChange();
       } catch (error) {
         console.log(error);
       }
     }
   };
 
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
+  const handleClickOutside = useCallback(
+    (e: MouseEvent) => {
       if (inputRef.current && !inputRef.current.contains(e.target as Node)) {
-        saveInputChange();
+        saveFileNameChange();
       }
-    };
+    },
+    [saveFileNameChange],
+  );
 
+  useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [inputRef, saveInputChange]);
+  }, [handleClickOutside]);
 
   return (
     <div className="flex items-center gap-3 sm:w-[55vw] md:w-[36vw]">
@@ -94,9 +91,9 @@ export const FileNameEditor = ({ activeFile }: FileNameEditorProps) => {
               ref={inputRef}
               type="text"
               className="w-full bg-transparent caret-customOrange focus:outline-none focus:ring-2 focus:ring-customOrangeHover"
-              value={docNameInput}
+              value={fileName}
               onChange={handleInputChange}
-              onKeyDown={handleSaveInputChange}
+              onKeyDown={handleKeyDown}
             />
           ) : (
             <button
@@ -104,7 +101,7 @@ export const FileNameEditor = ({ activeFile }: FileNameEditorProps) => {
               disabled={activeFile.sys.id === welcomeFile.sys.id}
               className={`${activeFile.sys.id === welcomeFile.sys.id ? "cursor-not-allowed" : "cursor-pointer transition-colors duration-300 hover:border-b-[1px] hover:text-customOrange"}`}
             >
-              <p className="translate-y-[2px] transform">{docNameInput}</p>
+              <p className="translate-y-[2px] transform">{fileName}</p>
             </button>
           )}
         </div>
