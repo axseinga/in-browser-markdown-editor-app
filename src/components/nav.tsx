@@ -1,17 +1,15 @@
 import { HamburgerMenu } from "@/components/hamburger-menu";
-import { DialogT, MarkdownItemT } from "@/types";
+import { MarkdownItemT } from "@/types";
 import { FileNameEditor } from "@/components/file-name-editor";
 import { SaveFileChangesButton } from "@/components/save-file-changes-button";
 import { UserNavPanel } from "@/components/user-nav-panel";
-import { DeleteFileButton } from "./delete-file-button";
+import { DeleteFileButton } from "@/components/delete-file-button";
 
 type NavProps = {
   activeFile: MarkdownItemT;
-  setIsDialogOpen: (isOpen: boolean) => void;
-  setDialogId: (id: DialogT) => void;
 };
 
-export const Nav = ({ activeFile, setIsDialogOpen, setDialogId }: NavProps) => {
+export const Nav = ({ activeFile }: NavProps) => {
   return (
     <nav className="flex h-14 w-full flex-shrink-0 items-center bg-customGrey-800 text-white sm:h-[4.5rem] sm:pr-2">
       <HamburgerMenu />
@@ -21,20 +19,9 @@ export const Nav = ({ activeFile, setIsDialogOpen, setDialogId }: NavProps) => {
       <div className="flex w-full items-center justify-between pl-7 pr-2">
         <FileNameEditor activeFile={activeFile} />
         <div className="flex items-center gap-4 pl-4">
-          <UserNavPanel
-            setIsDialogOpen={setIsDialogOpen}
-            setDialogId={setDialogId}
-          />
-          <DeleteFileButton
-            fileId={activeFile.sys.id}
-            setIsDialogOpen={setIsDialogOpen}
-            setDialogId={setDialogId}
-          />
-          <SaveFileChangesButton
-            activeFile={activeFile}
-            setDialogId={setDialogId}
-            setIsDialogOpen={setIsDialogOpen}
-          />
+          <UserNavPanel />
+          <DeleteFileButton fileId={activeFile.sys.id} />
+          <SaveFileChangesButton activeFile={activeFile} />
         </div>
       </div>
     </nav>

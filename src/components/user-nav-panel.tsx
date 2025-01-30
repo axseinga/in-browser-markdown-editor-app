@@ -1,45 +1,56 @@
 import { IconLogin } from "@/components/icons/icon-login";
 import { useAppState } from "@/state/app-state";
-import { DialogT } from "@/types";
+import { DialogIdEnum, DialogT } from "@/types";
 
-type UserNavProps = {
-  setIsDialogOpen: (isOpen: boolean) => void;
-  setDialogId: (id: DialogT) => void;
-};
+export const UserNavPanel = () => {
+  const { user, setIsDialogOpen, setDialogId } = useAppState((state) => state);
 
-export const UserNavPanel = ({
-  setIsDialogOpen,
-  setDialogId,
-}: UserNavProps) => {
-  const { user } = useAppState((state) => state);
+  const showDialog = (id: DialogT) => {
+    setIsDialogOpen(true);
+    setDialogId(id);
+  };
+
   return (
     <>
       {user ? (
-        <div className="flex items-center gap-3">
-          <p className="heading-s-in-app text-customGrey-300">
-            Hi, {user.name}
-          </p>
-          <button
-            aria-label="Log out"
-            onClick={() => {
-              setIsDialogOpen(true);
-              setDialogId("logout");
-            }}
-          >
-            <IconLogin color="#E46643" />
-          </button>
-        </div>
+        <UserGreetings userName={user.name} showDialog={showDialog} />
       ) : (
-        <button
-          aria-label="Login"
-          onClick={() => {
-            setIsDialogOpen(true);
-            setDialogId("login");
-          }}
-        >
-          <IconLogin />
-        </button>
+        <LoginButton showDialog={showDialog} />
       )}
     </>
+  );
+};
+
+type UserGreetingsProps = {
+  userName: string;
+  showDialog: (id: DialogT) => void;
+};
+
+const UserGreetings = ({ userName, showDialog }: UserGreetingsProps) => {
+  return (
+    <div className="flex items-center gap-3">
+      <p className="heading-s-in-app text-customGrey-300">Hi, {userName}</p>
+      <button
+        aria-label="Logout"
+        onClick={() => showDialog(DialogIdEnum.LOGOUT_ACTION)}
+      >
+        <IconLogin color="#E46643" />
+      </button>
+    </div>
+  );
+};
+
+type LoginButtonProps = {
+  showDialog: (id: DialogT) => void;
+};
+
+const LoginButton = ({ showDialog }: LoginButtonProps) => {
+  return (
+    <button
+      aria-label="Login"
+      onClick={() => showDialog(DialogIdEnum.LOGIN_ACTION)}
+    >
+      <IconLogin />
+    </button>
   );
 };

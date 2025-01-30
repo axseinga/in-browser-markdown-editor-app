@@ -1,17 +1,13 @@
 import { useAppState } from "@/state/app-state";
 
-type LogoutModalBodyProps = {
-  setIsModalOpen: (isOpen: boolean) => void;
-};
+export const LogoutModalBody = () => {
+  const { setUser, setIsDialogOpen } = useAppState((state) => state);
 
-export const LogoutModalBody = ({ setIsModalOpen }: LogoutModalBodyProps) => {
-  const { setUser } = useAppState((state) => state);
-  
   const handleLogout = async () => {
     setUser(null);
 
     setTimeout(() => {
-      setIsModalOpen(false);
+      setIsDialogOpen(false);
     }, 500);
   };
 

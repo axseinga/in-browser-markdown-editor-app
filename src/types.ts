@@ -56,4 +56,12 @@ export type UserT = {
   email: string;
 };
 
+export enum DialogIdEnum {
+  LOGIN_ACTION = "login",
+  LOGOUT_ACTION = "logout",
+  DELETE_ACTION = "deleteAction",
+  SAVE_ACTION = "saveAction",
+  CLOSED = "",
+}
+
 export type DialogT = "" | "login" | "logout" | "deleteAction" | "saveAction";

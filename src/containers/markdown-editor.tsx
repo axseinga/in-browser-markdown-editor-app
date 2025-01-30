@@ -23,7 +23,7 @@ export const MarkdownEditor = ({
 
   useEffect(() => {
     setContentInput(activeFile.content);
-  }, [activeFileID]);
+  }, [activeFileID, activeFile.content]);
 
   return (
     <div

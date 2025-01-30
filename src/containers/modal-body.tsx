@@ -2,39 +2,26 @@ import { DeleteConfirmationModalBody } from "@/containers/delete-confirmation-mo
 import { LoginModalBody } from "@/containers/login-modal-body";
 import { LogoutModalBody } from "@/containers/logout-modal-body";
 import { SaveChangesSuccessModalBody } from "@/containers/save-changes-success-modal-body";
-import { DialogT } from "@/types";
+import { useAppState } from "@/state/app-state";
+import { DialogIdEnum } from "@/types";
 
 type ModalBodyProps = {
-  dialogId: DialogT;
-  setIsDialogOpen: (isOpen: boolean) => void;
   activeFileName: string;
 };
 
-export const ModalBody = ({
-  dialogId,
-  setIsDialogOpen,
-  activeFileName,
-}: ModalBodyProps) => {
+export const ModalBody = ({ activeFileName }: ModalBodyProps) => {
+  const { dialogId } = useAppState((state) => state);
+
   const getModalBody = (id: string) => {
     switch (id) {
-      case "login":
-        return <LoginModalBody setIsModalOpen={setIsDialogOpen} />;
-      case "logout":
-        return <LogoutModalBody setIsModalOpen={setIsDialogOpen} />;
-      case "deleteAction":
-        return (
-          <DeleteConfirmationModalBody
-            setIsModalOpen={setIsDialogOpen}
-            fileName={activeFileName}
-          />
-        );
-      case "saveAction":
-        return (
-          <SaveChangesSuccessModalBody
-            setIsModalOpen={setIsDialogOpen}
-            fileName={activeFileName}
-          />
-        );
+      case DialogIdEnum.LOGIN_ACTION:
+        return <LoginModalBody />;
+      case DialogIdEnum.LOGOUT_ACTION:
+        return <LogoutModalBody />;
+      case DialogIdEnum.DELETE_ACTION:
+        return <DeleteConfirmationModalBody fileName={activeFileName} />;
+      case DialogIdEnum.SAVE_ACTION:
+        return <SaveChangesSuccessModalBody fileName={activeFileName} />;
       default:
         return null;
     }

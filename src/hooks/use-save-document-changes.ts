@@ -1,6 +1,6 @@
 import { updateMarkdownContent } from "@/services/api/markdown/update-markdown-content";
 import { useAppState } from "@/state/app-state";
-import { MarkdownItemT } from "@/types";
+import { DialogIdEnum, MarkdownItemT } from "@/types";
 
 type UseSaveDocumentChangesProps = {
   activeFile: MarkdownItemT;
@@ -9,11 +9,17 @@ type UseSaveDocumentChangesProps = {
 export const useSaveDocumentChanges = ({
   activeFile,
 }: UseSaveDocumentChangesProps) => {
-  const { activeFileID, editingContent, user, updateMarkdownItem } =
-    useAppState((state) => state);
+  const {
+    activeFileID,
+    editingContent,
+    user,
+    updateMarkdownItem,
+    setIsDialogOpen,
+    setDialogId,
+  } = useAppState((state) => state);
 
-  const saveFileChanges = async () => {
-    setDialogId("saveAction");
+  const saveDocumentChanges = async () => {
+    setDialogId(DialogIdEnum.SAVE_ACTION);
     updateMarkdownItem(activeFileID, {
       ...activeFile,
       content: editingContent,
@@ -37,4 +43,6 @@ export const useSaveDocumentChanges = ({
       setIsDialogOpen(true);
     }, 500);
   };
+
+  return { saveDocumentChanges };
 };

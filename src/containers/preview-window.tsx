@@ -8,6 +8,7 @@ type PreviewWindowProps = {
 
 export const PreviewWindow = ({ data }: PreviewWindowProps) => {
   const { showMarkdown } = useAppState((state) => state);
+
   return (
     <div className="flex h-full flex-col justify-stretch">
       <WindowHeading title="Preview" />

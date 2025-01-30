@@ -9,14 +9,10 @@ import { useAppState } from "@/state/app-state";
 
 type LoginFormProps = {
   setShowRegister: (showRegister: boolean) => void;
-  setIsModalOpen: (isOpen: boolean) => void;
 };
 
-export const LoginForm = ({
-  setShowRegister,
-  setIsModalOpen,
-}: LoginFormProps) => {
-  const { setUser } = useAppState((state) => state);
+export const LoginForm = ({ setShowRegister }: LoginFormProps) => {
+  const { setUser, setIsDialogOpen } = useAppState((state) => state);
   const {
     register,
     handleSubmit,
@@ -28,30 +24,30 @@ export const LoginForm = ({
   const [error, setError] = useState<string | null>(null);
 
   const onSubmit = async (formData: FormTypes) => {
+    setError(null);
+    
     try {
-      const isUserLoggedIn = await loginUser(formData);
-      if (isUserLoggedIn.status === 200 && isUserLoggedIn.data) {
+      const loginResponse = await loginUser(formData);
+      if (loginResponse.status === 200 && loginResponse.data) {
         setUser({
-          email: isUserLoggedIn.data.email,
-          name: isUserLoggedIn.data.name,
-          id: isUserLoggedIn.data.sys.id,
+          email: loginResponse.data.email,
+          name: loginResponse.data.name,
+          id: loginResponse.data.sys.id,
         });
         setTimeout(() => {
-          setIsModalOpen(false);
+          setIsDialogOpen(false);
           reset();
         }, 1000);
-      } else if (
-        isUserLoggedIn.status === 401 ||
-        isUserLoggedIn.status === 404
-      ) {
+      } else if (loginResponse.status === 401 || loginResponse.status === 404) {
         setError("Invalid email or password");
         reset();
       } else {
         setError("Something went wrong. Please try again later.");
         reset();
       }
-    } catch (err) {
-      console.error(err);
+    } catch (error) {
+      console.error("Error logging in:", error);
+      setError("An unexpected error occurred. Please try again later.");
     }
   };
 

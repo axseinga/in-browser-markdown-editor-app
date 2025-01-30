@@ -18,7 +18,7 @@ export const WindowHeading = ({
         {title}
       </p>
       <button
-        onClick={() => toggleShowMarkdown()}
+        onClick={toggleShowMarkdown}
         className={`flex h-[2.2rem] w-[2.2rem] items-center justify-center ${hideToggleButtonOnDesktop ? "md:hidden" : ""}`}
       >
         <IconShowHidePreview show={showMarkdown} />

@@ -1,23 +1,24 @@
+import { useAppState } from "@/state/app-state";
 import { useCallback, useEffect, useRef } from "react";
 
 type ModalProps = {
-  isOpen: boolean;
-  setIsModalOpen: (isOpen: boolean) => void;
-  id: string;
   children?: React.ReactNode;
 };
 
-export const Modal = ({ isOpen, setIsModalOpen, id, children }: ModalProps) => {
+export const Modal = ({ children }: ModalProps) => {
+  const { isDialogOpen, setIsDialogOpen, dialogId } = useAppState(
+    (state) => state,
+  );
   const dialogRef = useRef<HTMLDialogElement>(null);
 
   const handleCloseDialog = useCallback(
     (e: MouseEvent) => {
       if (dialogRef.current && e.target === dialogRef.current) {
-        setIsModalOpen(false);
+        setIsDialogOpen(false);
         dialogRef.current.close();
       }
     },
-    [setIsModalOpen],
+    [setIsDialogOpen],
   );
 
   useEffect(() => {
@@ -36,7 +37,7 @@ export const Modal = ({ isOpen, setIsModalOpen, id, children }: ModalProps) => {
     if (body === null) return;
     if (!dialogRef.current) return;
 
-    if (isOpen) {
+    if (isDialogOpen) {
       body.style.overflow = "hidden";
       body.style.paddingRight = `${scrollBarWidth}px`;
       dialogRef.current.showModal();
@@ -50,17 +51,17 @@ export const Modal = ({ isOpen, setIsModalOpen, id, children }: ModalProps) => {
       body.style.overflow = "auto";
       body.style.paddingRight = `0px`;
     };
-  }, [isOpen]);
+  }, [isDialogOpen]);
 
   return (
     <dialog
       role="dialog"
-      id={id}
-      aria-modal={isOpen ? "true" : "false"}
+      id={`${dialogId}_modal`}
+      aria-modal={isDialogOpen ? "true" : "false"}
       aria-describedby="dialog-description"
       className="fixed left-0 top-0 m-auto rounded-md backdrop:bg-[rgba(0,0,0,0.7)] dark:backdrop:bg-[rgba(62,62,62,0.7)]"
       ref={dialogRef}
-      onClose={() => setIsModalOpen(false)}
+      onClose={() => setIsDialogOpen(false)}
     >
       {children}
     </dialog>

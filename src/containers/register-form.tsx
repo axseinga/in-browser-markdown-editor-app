@@ -6,12 +6,11 @@ import { TextInput } from "@/components/text-input";
 import { registerSchema } from "@/utils/form-schemas/register-schema";
 import { registerUser } from "@/services/api/user/register-user";
 
-type LoginFormProps = {
+type RegisterFormProps = {
   setShowRegister: (showRegister: boolean) => void;
-  setIsModalOpen: (isOpen: boolean) => void;
 };
 
-export const RegisterForm = ({ setShowRegister }: LoginFormProps) => {
+export const RegisterForm = ({ setShowRegister }: RegisterFormProps) => {
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
   const [error, setError] = useState("");
   const {
@@ -51,16 +50,7 @@ export const RegisterForm = ({ setShowRegister }: LoginFormProps) => {
   return (
     <>
       {isFormSubmitted ? (
-        <p className="mt-2 flex flex-col items-center gap-4 dark:text-customGrey-400">
-          <span className="preview-h6 text-xl">Success!</span>
-          <span>Your account has been created.</span>
-          <button
-            onClick={() => setShowRegister(false)}
-            className="heading-m-in-app mt-2 flex items-center justify-center rounded-md bg-customOrange p-3 font-light text-white transition-all duration-300 hover:bg-customOrangeHover sm:px-4"
-          >
-            Login here
-          </button>
-        </p>
+        <SucessMessage setShowRegister={setShowRegister} />
       ) : (
         <>
           <p
@@ -125,5 +115,24 @@ export const RegisterForm = ({ setShowRegister }: LoginFormProps) => {
         </>
       )}
     </>
+  );
+};
+
+type SucessMessageProps = {
+  setShowRegister: (showRegister: boolean) => void;
+};
+
+const SucessMessage = ({ setShowRegister }: SucessMessageProps) => {
+  return (
+    <p className="mt-2 flex flex-col items-center gap-4 dark:text-customGrey-400">
+      <span className="preview-h6 text-xl">Success!</span>
+      <span>Your account has been created.</span>
+      <button
+        onClick={() => setShowRegister(false)}
+        className="heading-m-in-app mt-2 flex items-center justify-center rounded-md bg-customOrange p-3 font-light text-white transition-all duration-300 hover:bg-customOrangeHover sm:px-4"
+      >
+        Login here
+      </button>
+    </p>
   );
 };

@@ -1,5 +1,5 @@
 import { welcomeFile } from "@/data";
-import { MarkdownItemT, UserT } from "@/types";
+import { DialogT, MarkdownItemT, UserT } from "@/types";
 import { create } from "zustand";
 
 type AppStateT = {
@@ -9,6 +9,8 @@ type AppStateT = {
   setTheme: (theme: "light" | "dark") => void;
   isDialogOpen: boolean;
   setIsDialogOpen: (isDialogOpen: boolean) => void;
+  dialogId: DialogT;
+  setDialogId: (dialogId: DialogT) => void;
   showMarkdown: boolean;
   toggleShowMarkdown: () => void;
   showSidebar: boolean;
@@ -32,6 +34,8 @@ export const useAppState = create<AppStateT>()((set) => {
     setTheme: (theme) => set({ theme }),
     isDialogOpen: false,
     setIsDialogOpen: (isDialogOpen) => set({ isDialogOpen }),
+    dialogId: "",
+    setDialogId: (dialogId) => set({ dialogId }),
     showMarkdown: true,
     toggleShowMarkdown: () =>
       set((state) => ({ showMarkdown: !state.showMarkdown })),
