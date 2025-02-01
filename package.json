@@ -1,5 +1,5 @@
 {
-  "name": "tailwind-vite-template",
+  "name": "in-browser-markdown-editor",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
+    "@netlify/functions": "^3.0.0",
     "axios": "^1.7.9",
     "bcryptjs": "^2.4.3",
     "contentful-management": "^11.43.2",

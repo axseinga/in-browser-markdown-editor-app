@@ -2,8 +2,21 @@ import { getUserByEmailQuery } from "./utils/queries/get-user-by-email";
 import bcrypt from "bcryptjs";
 import { contentfulGraphQLClient } from "./utils/contentful-graphql-client";
 import { UserCollectionResponse } from "../../src/types";
+import type { Handler } from "@netlify/functions";
 
-exports.handler = async (event) => {
+type EventBody = {
+  email: string;
+  password: string;
+};
+
+const validateRequestBody = (body: EventBody) => {
+  if (!body.email || !body.password) {
+    return false;
+  }
+  return true;
+};
+
+export const handler: Handler = async (event) => {
   if (!event.body) {
     return {
       statusCode: 400,
@@ -11,24 +24,26 @@ exports.handler = async (event) => {
     };
   }
 
-  const { email, password } = JSON.parse(event.body);
-
-  if (!email || !password)
+  const body: EventBody = JSON.parse(event.body);
+  if (!validateRequestBody(body)) {
     return {
       statusCode: 400,
       body: JSON.stringify({ message: "Missing required fields" }),
     };
+  }
+
+  const { email, password } = body;
 
   try {
     const variables = { email };
 
-    const response =
+    const userResponse =
       await contentfulGraphQLClient.request<UserCollectionResponse>(
         getUserByEmailQuery,
         variables,
       );
 
-    const user = response?.userCollection?.items?.[0] ?? null;
+    const user = userResponse?.userCollection?.items?.[0] ?? null;
 
     if (!user)
       return {

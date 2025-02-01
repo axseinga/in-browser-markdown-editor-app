@@ -1,6 +1,19 @@
 import { contentfulClient } from "./utils/contentful-client";
+import type { Handler } from "@netlify/functions";
 
-exports.handler = async (event) => {
+type EventBody = {
+  newMarkdownName: string;
+  markdownId: string;
+};
+
+const validateRequestBody = (body: EventBody) => {
+  if (!body.newMarkdownName || !body.markdownId) {
+    return false;
+  }
+  return true;
+};
+
+export const handler: Handler = async (event) => {
   if (!event.body) {
     return {
       statusCode: 400,
@@ -8,23 +21,22 @@ exports.handler = async (event) => {
     };
   }
 
-  const { newMarkdownName, markdownId } = JSON.parse(event.body);
-
-  console.log(newMarkdownName, markdownId);
-
-  if (!newMarkdownName || !markdownId)
+  const body: EventBody = JSON.parse(event.body);
+  if (!validateRequestBody(body)) {
     return {
       statusCode: 400,
       body: JSON.stringify({ message: "Missing required fields" }),
     };
+  }
+
+  const { newMarkdownName, markdownId } = body;
 
   try {
-    const res = await contentfulClient.entry.get({
+    const entry = await contentfulClient.entry.get({
       entryId: markdownId,
     });
-    console.log(res);
 
-    if (!res.fields)
+    if (!entry.fields)
       return {
         statusCode: 404,
         body: JSON.stringify({
@@ -32,15 +44,15 @@ exports.handler = async (event) => {
         }),
       };
 
-    const fields = res.fields;
+    const fields = entry.fields;
     fields.name = { "en-US": newMarkdownName };
 
-    const updateRes = await contentfulClient.entry.update(
+    const updatedEntry = await contentfulClient.entry.update(
       { entryId: markdownId },
-      { sys: res.sys, fields },
+      { sys: entry.sys, fields },
     );
 
-    if (!updateRes.fields)
+    if (!updatedEntry.fields)
       return {
         statusCode: 500,
         body: JSON.stringify({
@@ -48,12 +60,12 @@ exports.handler = async (event) => {
         }),
       };
 
-    const publishedRes = await contentfulClient.entry.publish(
+    const publishedEntry = await contentfulClient.entry.publish(
       { entryId: markdownId },
-      updateRes,
+      updatedEntry,
     );
 
-    if (!publishedRes.fields)
+    if (!publishedEntry.fields)
       return {
         statusCode: 500,
         body: JSON.stringify({
@@ -65,7 +77,7 @@ exports.handler = async (event) => {
       statusCode: 200,
       body: JSON.stringify({
         message: "Markdown updated and published succesfully",
-        data: updateRes.fields,
+        data: updatedEntry.fields,
       }),
     };
   } catch (error) {

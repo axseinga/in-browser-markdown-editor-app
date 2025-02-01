@@ -1,7 +1,19 @@
 import { contentfulClient } from "./utils/contentful-client";
+import type { Handler } from "@netlify/functions";
 
-exports.handler = async (event) => {
-  console.log("event.body", event.body);
+type EventBody = {
+  markdownId: string;
+};
+
+const validateRequestBody = (body: EventBody) => {
+  if (!body.markdownId) {
+    return false;
+  }
+  return true;
+};
+
+export const handler: Handler = async (event) => {
+
   if (!event.body) {
     return {
       statusCode: 400,
@@ -9,20 +21,22 @@ exports.handler = async (event) => {
     };
   }
 
-  const { markdownId } = JSON.parse(event.body);
-
-  if (!markdownId)
+  const body: EventBody = JSON.parse(event.body);
+  if (!validateRequestBody(body)) {
     return {
       statusCode: 400,
       body: JSON.stringify({ message: "Missing markdown ID" }),
     };
+  }
+
+  const { markdownId } = body;
 
   try {
-    const res = await contentfulClient.entry.unpublish({
+    const unpublishedEntry = await contentfulClient.entry.unpublish({
       entryId: markdownId,
     });
 
-    if (!res.fields)
+    if (!unpublishedEntry.fields)
       return {
         statusCode: 500,
         body: JSON.stringify({
@@ -43,5 +57,11 @@ exports.handler = async (event) => {
     };
   } catch (error) {
     console.error("Error deleting entry:", error);
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        message: "Internal server error",
+      }),
+    };
   }
 };

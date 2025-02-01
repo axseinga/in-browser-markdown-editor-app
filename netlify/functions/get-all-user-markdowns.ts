@@ -1,8 +1,20 @@
 import { getMarkdownsQuery } from "./utils/queries/get-markdowns-by-email";
 import { contentfulGraphQLClient } from "./utils/contentful-graphql-client";
 import { MarkdownCollectionResponse } from "../../src/types";
+import type { Handler } from "@netlify/functions";
 
-exports.handler = async (event) => {
+type EventBody = {
+  email: string;
+};
+
+const validateRequestBody = (body: EventBody) => {
+  if (!body.email) {
+    return false;
+  }
+  return true;
+};
+
+export const handler: Handler = async (event) => {
   if (!event.body) {
     return {
       statusCode: 400,
@@ -10,29 +22,32 @@ exports.handler = async (event) => {
     };
   }
 
-  const { email } = JSON.parse(event.body);
-
-  if (!email)
+  const body: EventBody = JSON.parse(event.body);
+  if (!validateRequestBody(body)) {
     return {
       statusCode: 400,
-      body: JSON.stringify({ message: "Missing user email" }),
+      body: JSON.stringify({ message: "Missing required fields" }),
     };
+  }
+
+  const { email } = body;
 
   try {
     const variables = { email };
-    const data =
+
+    const markdownResponse =
       await contentfulGraphQLClient.request<MarkdownCollectionResponse>(
         getMarkdownsQuery,
         variables,
       );
 
-    const items = data?.markdownCollection?.items ?? [];
+    const markdownItems = markdownResponse?.markdownCollection?.items ?? [];
 
     return {
       statusCode: 200,
       body: JSON.stringify({
         message: "User markdowns fetched successfully",
-        data: items,
+        data: markdownItems,
       }),
     };
   } catch (error) {

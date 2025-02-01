@@ -1,6 +1,25 @@
 import { contentfulClient } from "./utils/contentful-client";
+import type { Handler } from "@netlify/functions";
+import type { MarkdownItemT } from "../../src/types";
 
-exports.handler = async (event) => {
+type EventBody = {
+  markdownItem: MarkdownItemT;
+  userId: string;
+};
+
+const validateRequestBody = (body: EventBody) => {
+  if (
+    !body.markdownItem ||
+    !body.markdownItem.name ||
+    !body.markdownItem.createdAt ||
+    !body.userId
+  ) {
+    return false;
+  }
+  return true;
+};
+
+export const handler: Handler = async (event) => {
   if (!event.body) {
     return {
       statusCode: 400,
@@ -8,20 +27,17 @@ exports.handler = async (event) => {
     };
   }
 
-  const { markdownItem, userId } = JSON.parse(event.body);
-  if (
-    !markdownItem ||
-    !markdownItem.name ||
-    !markdownItem.createdAt ||
-    userId === ""
-  )
+  const body: EventBody = JSON.parse(event.body);
+  if (!validateRequestBody(body)) {
     return {
       statusCode: 400,
       body: JSON.stringify({ message: "Missing required fields" }),
     };
+  }
+  const { markdownItem, userId } = body;
 
   try {
-    const res = await contentfulClient.entry.create(
+    const entry = await contentfulClient.entry.create(
       { contentTypeId: "markdown" },
       {
         fields: {
@@ -47,7 +63,7 @@ exports.handler = async (event) => {
       },
     );
 
-    if (!res.fields)
+    if (!entry.fields)
       return {
         statusCode: 404,
         body: JSON.stringify({
@@ -55,12 +71,12 @@ exports.handler = async (event) => {
         }),
       };
 
-    const publishedRes = await contentfulClient.entry.publish(
-      { entryId: res.sys.id },
-      res,
+    const publishedEntry = await contentfulClient.entry.publish(
+      { entryId: entry.sys.id },
+      entry,
     );
 
-    if (!publishedRes.fields)
+    if (!publishedEntry.fields)
       return {
         statusCode: 500,
         body: JSON.stringify({
@@ -73,7 +89,7 @@ exports.handler = async (event) => {
       body: JSON.stringify({
         message: "Markdown created and published succesfully",
         data: {
-          id: res.sys.id,
+          id: entry.sys.id,
         },
       }),
     };

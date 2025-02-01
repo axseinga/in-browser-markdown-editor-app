@@ -3,8 +3,23 @@ import { contentfulClient } from "./utils/contentful-client";
 import { contentfulGraphQLClient } from "./utils/contentful-graphql-client";
 import { UserCollectionResponse } from "../../src/types";
 import { getUserByEmailQuery } from "./utils/queries/get-user-by-email";
+import type { Handler } from "@netlify/functions";
 
-exports.handler = async (event) => {
+type EventBody = {
+  name: string;
+  email: string;
+  password: string;
+};
+
+const validateRequestBody = (body: EventBody) => {
+  if (!body.name || !body.email || !body.password) {
+    return false;
+  }
+  return true;
+};
+
+export const handler: Handler = async (event) => {
+  console.log("inside");
   if (!event.body) {
     return {
       statusCode: 400,
@@ -12,13 +27,15 @@ exports.handler = async (event) => {
     };
   }
 
-  const { name, email, password } = JSON.parse(event.body);
-
-  if (!email || !password)
+  const body: EventBody = JSON.parse(event.body);
+  if (!validateRequestBody(body)) {
     return {
       statusCode: 400,
       body: JSON.stringify({ message: "Missing required fields" }),
     };
+  }
+
+  const { name, email, password } = body;
 
   const variables = { email };
 
@@ -41,7 +58,7 @@ exports.handler = async (event) => {
   const hashedPassword = await bcrypt.hash(password, 10);
 
   try {
-    const res = await contentfulClient.entry.create(
+    const createdUserEntry = await contentfulClient.entry.create(
       { contentTypeId: "user" },
       {
         fields: {
@@ -58,7 +75,7 @@ exports.handler = async (event) => {
       },
     );
 
-    if (!res.fields)
+    if (!createdUserEntry.fields)
       return {
         statusCode: 404,
         body: JSON.stringify({
@@ -66,12 +83,12 @@ exports.handler = async (event) => {
         }),
       };
 
-    const publishedRes = await contentfulClient.entry.publish(
-      { entryId: res.sys.id },
-      res,
+    const publishedUserEntry = await contentfulClient.entry.publish(
+      { entryId: createdUserEntry.sys.id },
+      createdUserEntry,
     );
 
-    if (!publishedRes.fields)
+    if (!publishedUserEntry.fields)
       return {
         statusCode: 500,
         body: JSON.stringify({
@@ -83,7 +100,7 @@ exports.handler = async (event) => {
       statusCode: 200,
       body: JSON.stringify({
         message: "User registered successfully",
-        data: publishedRes.sys.id,
+        data: publishedUserEntry.sys.id,
       }),
     };
   } catch (error) {
